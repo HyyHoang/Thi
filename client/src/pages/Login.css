@@ -1,0 +1,105 @@
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  padding: clamp(16px, 4vw, 28px);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  padding: clamp(18px, 5vw, 40px);
+  color: #1a1a2e;
+}
+
+.login-card h1 {
+  margin: 0 0 0.25rem 0;
+  font-size: clamp(1.4rem, 3.2vw, 1.9rem);
+  font-weight: 700;
+  text-align: center;
+}
+
+.login-subtitle {
+  margin: 0 0 1.75rem 0;
+  color: #64748b;
+  font-size: clamp(0.9rem, 2.6vw, 1rem);
+  text-align: center;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.login-error {
+  padding: 0.75rem 1rem;
+  background: #fef2f2;
+  color: #b91c1c;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-group label {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #334155;
+}
+
+.form-group input {
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 16px; /* tránh iOS zoom khi focus */
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #0f3460;
+  box-shadow: 0 0 0 3px rgba(15, 52, 96, 0.15);
+}
+
+.form-group input::placeholder {
+  color: #94a3b8;
+}
+
+.form-group input:disabled {
+  background: #f1f5f9;
+  cursor: not-allowed;
+}
+
+.login-btn {
+  margin-top: 0.5rem;
+  padding: 0.85rem 1.5rem;
+  background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+  width: 100%;
+}
+
+.login-btn:hover:not(:disabled) {
+  opacity: 0.95;
+  transform: translateY(-1px);
+}
+
+.login-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
