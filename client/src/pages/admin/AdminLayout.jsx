@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+﻿import React, { useState } from 'react';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import authService from '../../services/authService';
 import './AdminLayout.css';
 
 function AdminLayout() {
   const navigate = useNavigate();
-  const [user, setUser] = useState(() => {
+  const [user] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem('user') || 'null');
     } catch {
@@ -24,6 +24,8 @@ function AdminLayout() {
     navigate('/login', { replace: true });
   };
 
+  const isAdmin = user?.role === 0;
+
   return (
     <div className="admin-layout">
       <header className="admin-header">
@@ -41,9 +43,26 @@ function AdminLayout() {
           </div>
         </div>
       </header>
-      <main className="admin-main">
-        <Outlet />
-      </main>
+      <div className="admin-body">
+        <aside className="admin-sidebar">
+          <NavLink to="/admin" end className="admin-nav-link">
+            Dashboard
+          </NavLink>
+          {isAdmin && (
+            <NavLink to="/admin/users" className="admin-nav-link">
+              Quản lý tài khoản
+            </NavLink>
+          )}
+          <div className="admin-nav-section">Chức năng khác</div>
+          <span className="admin-nav-muted">Quản lý môn học</span>
+          <span className="admin-nav-muted">Quản lý lớp học phần</span>
+          <span className="admin-nav-muted">Quản lý câu hỏi</span>
+          <span className="admin-nav-muted">Quản lý đề thi</span>
+        </aside>
+        <main className="admin-main">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 }

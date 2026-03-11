@@ -1,4 +1,4 @@
-.admin-layout {
+﻿.admin-layout {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -55,12 +55,69 @@
   background: rgba(255, 255, 255, 0.3);
 }
 
-.admin-main {
+.admin-body {
   flex: 1;
+  display: grid;
+  grid-template-columns: 240px 1fr;
   max-width: 1280px;
   margin: 0 auto;
   width: 100%;
   padding: clamp(14px, 3vw, 24px);
+  gap: 1.5rem;
+}
+
+.admin-sidebar {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: fit-content;
+}
+
+.admin-nav-link {
+  color: #0f172a;
+  text-decoration: none;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+}
+
+.admin-nav-link.active {
+  background: #0f3460;
+  color: #fff;
+}
+
+.admin-nav-section {
+  margin-top: 6px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+}
+
+.admin-nav-muted {
+  font-size: 0.88rem;
+  color: #94a3b8;
+  padding: 6px 4px;
+}
+
+.admin-main {
+  flex: 1;
+}
+
+@media (max-width: 900px) {
+  .admin-body {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-sidebar {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
 }
 
 @media (max-width: 480px) {

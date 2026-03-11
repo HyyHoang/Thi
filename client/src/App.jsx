@@ -1,9 +1,10 @@
-import React from 'react';
+﻿import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminLayout from './pages/admin/AdminLayout';
 import AdminHome from './pages/admin/AdminHome';
+import UserList from './pages/admin/users/UserList';
 import './App.css';
 
 function App() {
@@ -15,12 +16,20 @@ function App() {
         <Route
           path="/admin"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={[0, 1]}>
               <AdminLayout />
             </ProtectedRoute>
           }
         >
           <Route index element={<AdminHome />} />
+          <Route
+            path="users"
+            element={
+              <ProtectedRoute allowedRoles={[0]}>
+                <UserList />
+              </ProtectedRoute>
+            }
+          />
         </Route>
         <Route path="*" element={<Navigate to="/admin" replace />} />
       </Routes>

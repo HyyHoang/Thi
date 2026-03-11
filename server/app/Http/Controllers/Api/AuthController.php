@@ -11,10 +11,11 @@ use Illuminate\Validation\ValidationException;
 class AuthController extends Controller
 {
     private const ROLE_ADMIN = 0;
-    private const STATUS_ACTIVE = 1;
+    private const ROLE_TEACHER = 1;
+    private const ROLE_STUDENT = 2;
 
     /**
-     * Đăng nhập trang quản trị (chỉ admin, status active).
+     * Đăng nhập trang quản trị (admin hoặc teacher).
      */
     public function login(Request $request): JsonResponse
     {
@@ -23,22 +24,18 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        $user = User::where('username', $request->username)->first();
+        // Bảng thật trong MySQL là `User` với cột `Username`, `Password`, `Role`, ...
+        $user = User::where('Username', $request->username)->first();
 
         // Mật khẩu dạng thuần (không hash) theo yêu cầu hiện tại của hệ thống.
-        if (!$user || $request->password !== $user->password) {
+        if (!$user || $request->password !== $user->Password) {
             throw ValidationException::withMessages([
                 'username' => ['Tên đăng nhập hoặc mật khẩu không đúng.'],
             ]);
         }
 
-        if ((int) $user->status !== self::STATUS_ACTIVE) {
-            throw ValidationException::withMessages([
-                'username' => ['Tài khoản đã bị vô hiệu hóa.'],
-            ]);
-        }
-
-        if ((int) $user->role !== self::ROLE_ADMIN) {
+        $role = (int) $user->Role;
+        if ($role !== self::ROLE_ADMIN && $role !== self::ROLE_TEACHER) {
             throw ValidationException::withMessages([
                 'username' => ['Bạn không có quyền truy cập trang quản trị.'],
             ]);
@@ -52,11 +49,13 @@ class AuthController extends Controller
             'message' => 'Đăng nhập thành công.',
             'data' => [
                 'token' => $token,
+                // Map field trả về theo dạng lowercase cho FE,
+                // dù trong DB đang là các cột viết hoa.
                 'user' => [
-                    'user_id' => $user->user_id,
-                    'username' => $user->username,
-                    'email' => $user->email,
-                    'role' => $user->role,
+                    'user_id' => $user->UserID,
+                    'username' => $user->Username,
+                    'email' => $user->Email,
+                    'role' => $user->Role,
                 ],
             ],
         ]);
@@ -71,10 +70,10 @@ class AuthController extends Controller
         return response()->json([
             'success' => true,
             'data' => [
-                'user_id' => $user->user_id,
-                'username' => $user->username,
-                'email' => $user->email,
-                'role' => $user->role,
+                'user_id' => $user->UserID,
+                'username' => $user->Username,
+                'email' => $user->Email,
+                'role' => $user->Role,
             ],
         ]);
     }

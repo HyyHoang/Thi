@@ -1,12 +1,26 @@
-import React from 'react';
+﻿import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
+import AccessDenied from './AccessDenied';
 
-function ProtectedRoute({ children }) {
+function ProtectedRoute({ children, allowedRoles }) {
   const token = localStorage.getItem('access_token');
   const location = useLocation();
 
   if (!token) {
     return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  if (Array.isArray(allowedRoles) && allowedRoles.length > 0) {
+    let user = null;
+    try {
+      user = JSON.parse(localStorage.getItem('user') || 'null');
+    } catch {
+      user = null;
+    }
+    const role = user?.role;
+    if (!allowedRoles.includes(role)) {
+      return <AccessDenied />;
+    }
   }
 
   return children;

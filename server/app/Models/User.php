@@ -11,21 +11,29 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    protected $table = 'users';
-    protected $primaryKey = 'user_id';
-    public $timestamps = false; // vì chỉ có created_at (timestamp)
+    /**
+     * Cấu hình mapping sang bảng MySQL hiện có: `User`
+     * với khóa chính `UserID` và các cột viết hoa.
+     */
+    protected $table = 'User';
+    protected $primaryKey = 'UserID';
+    public $timestamps = false;
 
     protected $fillable = [
-        'username', 'email', 'password', 'role', 'status'
+        'Username',
+        'Password',
+        'Email',
+        'AVT',
+        'Role',
+        'CreatedDate',
     ];
 
     protected $hidden = [
-        'password', // ẩn password khi trả về JSON
+        'Password',
     ];
 
     protected $casts = [
-        'role' => 'integer',
-        'status' => 'integer',
-        'created_at' => 'datetime',
+        'Role' => 'integer',
+        'CreatedDate' => 'datetime',
     ];
 }
