@@ -6,6 +6,7 @@ import AdminLayout from './pages/admin/AdminLayout';
 import AdminHome from './pages/admin/AdminHome';
 import UserList from './pages/admin/users/UserList';
 import InstituteList from './pages/admin/institutes/InstituteList';
+import DepartmentList from './pages/admin/departments/DepartmentList';
 import './App.css';
 
 function App() {
@@ -36,6 +37,14 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={[0, 1]}>
                 <InstituteList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="departments"
+            element={
+              <ProtectedRoute allowedRoles={[0, 1]}>
+                <DepartmentList />
               </ProtectedRoute>
             }
           />

@@ -16,7 +16,7 @@ function AdminLayout() {
   const handleLogout = async () => {
     try {
       await authService.logout();
-    } catch (_) {
+    } catch {
       // ignore
     }
     localStorage.removeItem('access_token');
@@ -55,6 +55,9 @@ function AdminLayout() {
           )}
           <NavLink to="/admin/institutes" className="admin-nav-link">
             Quản lý viện
+          </NavLink>
+          <NavLink to="/admin/departments" className="admin-nav-link">
+            Quản lý khoa
           </NavLink>
           <div className="admin-nav-section">Chức năng khác</div>
           <span className="admin-nav-muted">Quản lý môn học</span>

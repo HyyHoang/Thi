@@ -1,14 +1,14 @@
-﻿import axios from 'axios';
+import axios from 'axios';
 
 const axiosClient = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api', // Hoáº·c http://online-exam.test/api
+  baseURL: 'http://127.0.0.1:8000/api', // Hoặc http://online-exam.test/api
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
   },
 });
 
-// ThĂªm token vĂ o request
+// Thêm token vào request
 axiosClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('access_token');
@@ -20,7 +20,7 @@ axiosClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Xá»­ lĂ½ response
+// Xử lý response
 axiosClient.interceptors.response.use(
   (response) => response.data,
   (error) => {
