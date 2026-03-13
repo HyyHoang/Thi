@@ -1,10 +1,11 @@
-﻿import React from 'react';
+import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminLayout from './pages/admin/AdminLayout';
 import AdminHome from './pages/admin/AdminHome';
 import UserList from './pages/admin/users/UserList';
+import InstituteList from './pages/admin/institutes/InstituteList';
 import './App.css';
 
 function App() {
@@ -27,6 +28,14 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={[0]}>
                 <UserList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="institutes"
+            element={
+              <ProtectedRoute allowedRoles={[0, 1]}>
+                <InstituteList />
               </ProtectedRoute>
             }
           />

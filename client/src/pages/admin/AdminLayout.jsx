@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import authService from '../../services/authService';
 import './AdminLayout.css';
@@ -53,6 +53,9 @@ function AdminLayout() {
               Quản lý tài khoản
             </NavLink>
           )}
+          <NavLink to="/admin/institutes" className="admin-nav-link">
+            Quản lý viện
+          </NavLink>
           <div className="admin-nav-section">Chức năng khác</div>
           <span className="admin-nav-muted">Quản lý môn học</span>
           <span className="admin-nav-muted">Quản lý lớp học phần</span>

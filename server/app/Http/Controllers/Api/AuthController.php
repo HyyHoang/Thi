@@ -37,7 +37,7 @@ class AuthController extends Controller
         $role = (int) $user->Role;
         if ($role !== self::ROLE_ADMIN && $role !== self::ROLE_TEACHER) {
             throw ValidationException::withMessages([
-                'username' => ['Bạn không có quyền truy cập trang quản trị.'],
+                'username' => ['Bạn không có quyền truy cập hệ thống.'],
             ]);
         }
 

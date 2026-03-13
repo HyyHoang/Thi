@@ -22,7 +22,7 @@ class EnsureAdminOrTeacher
         if ($role !== self::ROLE_ADMIN && $role !== self::ROLE_TEACHER) {
             return response()->json([
                 'success' => false,
-                'message' => 'Bạn không có quyền truy cập trang quản trị',
+                'message' => 'Bạn không có quyền truy cập hệ thống',
             ], 403);
         }
 

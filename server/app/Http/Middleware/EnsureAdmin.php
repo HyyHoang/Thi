@@ -19,7 +19,7 @@ class EnsureAdmin
         if (!$user || (int) $user->Role !== self::ROLE_ADMIN) {
             return response()->json([
                 'success' => false,
-                'message' => 'Bạn không có quyền truy cập trang quản trị',
+                'message' => 'Bạn không có quyền truy cập hệ thống',
             ], 403);
         }
 
