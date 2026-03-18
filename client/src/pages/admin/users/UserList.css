@@ -1,4 +1,4 @@
-﻿.user-list-page {
+.user-list-page {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -9,7 +9,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .user-list-header h2 {
@@ -61,7 +61,9 @@
 .action-group {
   display: flex;
   gap: 0.5rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  align-items: center;
+  white-space: nowrap;
 }
 
 .primary-btn,
@@ -200,6 +202,15 @@
 }
 
 @media (max-width: 640px) {
+  .user-list-header {
+    flex-wrap: wrap;
+  }
+
+  .action-group {
+    flex-wrap: wrap;
+    white-space: normal;
+  }
+
   .user-table th:nth-child(4),
   .user-table td:nth-child(4),
   .user-table th:nth-child(6),

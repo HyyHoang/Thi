@@ -6,9 +6,10 @@
 
 .department-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 12px;
+  flex-wrap: nowrap;
 }
 
 .department-header h2 {
@@ -54,7 +55,9 @@
 .action-group {
   display: flex;
   gap: 8px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  align-items: center;
+  white-space: nowrap;
 }
 
 .modal-backdrop {
@@ -191,5 +194,16 @@
 .danger-btn {
   background: #dc2626;
   color: #ffffff;
+}
+
+@media (max-width: 640px) {
+  .department-header {
+    flex-wrap: wrap;
+  }
+
+  .action-group {
+    flex-wrap: wrap;
+    white-space: normal;
+  }
 }
 
