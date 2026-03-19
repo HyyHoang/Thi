@@ -5,81 +5,82 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\InstituteStoreRequest;
 use App\Http\Requests\InstituteUpdateRequest;
-use App\Models\Institute;
-use Illuminate\Database\QueryException;
+use App\Services\Contracts\InstituteServiceInterface;
 use Illuminate\Http\JsonResponse;
 
 class InstituteController extends Controller
 {
+    public function __construct(
+        private readonly InstituteServiceInterface $instituteService
+    ) {}
+
+    /**
+     * GET /api/institutes
+     * Lấy danh sách tất cả viện.
+     */
     public function index(): JsonResponse
     {
-        $institutes = Institute::orderBy('InstituteID')->get();
-
         return response()->json([
             'success' => true,
-            'data' => $institutes->map(fn (Institute $institute) => $this->mapInstitute($institute)),
+            'data'    => $this->instituteService->getAllFormatted(),
         ]);
     }
 
+    /**
+     * GET /api/institutes/{id}
+     * Lấy chi tiết 1 viện.
+     */
     public function show(int $id): JsonResponse
     {
-        $institute = Institute::where('InstituteID', $id)->firstOrFail();
-
         return response()->json([
             'success' => true,
-            'data' => $this->mapInstitute($institute, true),
+            'data'    => $this->instituteService->getByIdFormatted($id),
         ]);
     }
 
+    /**
+     * POST /api/institutes
+     * Tạo mới viện.
+     */
     public function store(InstituteStoreRequest $request): JsonResponse
     {
-        $data = $request->validated();
-
-        $institute = new Institute();
-        $institute->InstituteName = $data['institute_name'];
-        $institute->Description = $data['description'] ?? null;
-        $institute->CreatedDate = now();
-        $institute->save();
+        $data = $this->instituteService->create($request->validated());
 
         return response()->json([
             'success' => true,
             'message' => 'Thêm viện thành công',
-            'data' => $this->mapInstitute($institute),
+            'data'    => $data,
         ], 201);
     }
 
+    /**
+     * PUT /api/institutes/{id}
+     * Cập nhật thông tin viện.
+     */
     public function update(InstituteUpdateRequest $request, int $id): JsonResponse
     {
-        $institute = Institute::where('InstituteID', $id)->firstOrFail();
-        $data = $request->validated();
-
-        $institute->InstituteName = $data['institute_name'];
-        $institute->Description = $data['description'] ?? null;
-        $institute->save();
+        $data = $this->instituteService->update($id, $request->validated());
 
         return response()->json([
             'success' => true,
             'message' => 'Cập nhật viện thành công',
-            'data' => $this->mapInstitute($institute),
+            'data'    => $data,
         ]);
     }
 
+    /**
+     * DELETE /api/institutes/{id}
+     * Xóa viện.
+     */
     public function destroy(int $id): JsonResponse
     {
-        $institute = Institute::where('InstituteID', $id)->firstOrFail();
-
         try {
-            $institute->delete();
-        } catch (QueryException $e) {
-            // MySQL FK constraint violation: SQLSTATE[23000]
-            if (($e->errorInfo[0] ?? null) === '23000') {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Không thể xóa viện vì đang có dữ liệu liên quan',
-                ], 422);
-            }
-
-            throw $e;
+            $this->instituteService->delete($id);
+        } catch (\RuntimeException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 422);
         }
 
         return response()->json([
@@ -87,20 +88,4 @@ class InstituteController extends Controller
             'message' => 'Xóa viện thành công',
         ]);
     }
-
-    private function mapInstitute(Institute $institute, bool $includeCreatedDate = false): array
-    {
-        $payload = [
-            'institute_id' => $institute->InstituteID,
-            'institute_name' => $institute->InstituteName,
-            'description' => $institute->Description,
-        ];
-
-        if ($includeCreatedDate) {
-            $payload['created_date'] = $institute->CreatedDate;
-        }
-
-        return $payload;
-    }
 }
-
