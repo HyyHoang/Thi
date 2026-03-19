@@ -1,4 +1,4 @@
-﻿.admin-layout {
+.admin-layout {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -35,11 +35,88 @@
   flex-wrap: wrap;
 }
 
-.admin-user {
-  font-size: 0.9rem;
-  opacity: 0.95;
+.admin-user-menu {
+  position: relative;
 }
 
+.admin-user-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.admin-user-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.admin-user-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.admin-user-caret {
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+}
+
+.admin-user-caret.open {
+  transform: rotate(180deg);
+}
+
+.admin-user-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 100;
+  border: 1px solid #e2e8f0;
+}
+
+.admin-dropdown-item {
+  padding: 0.75rem 1rem;
+  color: #334155;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.admin-dropdown-item:hover {
+  background: #f1f5f9;
+}
+
+.admin-dropdown-item.active {
+  background: #e2e8f0;
+  color: #0f3460;
+}
+
+.text-danger {
+  color: #ef4444;
+  border-top: 1px solid #f1f5f9;
+}
+
+.text-danger:hover {
+  background: #fef2f2;
+}
+
+/* Fallback logout btn */
 .admin-logout-btn {
   padding: 0.5rem 1rem;
   background: rgba(255, 255, 255, 0.2);

@@ -16,10 +16,12 @@ export interface AuthResponse {
 // User
 // =====================
 export interface User {
-    id: number;
+    user_id: number;
     username: string;
     email: string;
-    role: number; // 0 = admin, 1 = normal user
+    role: number; // 0 = admin, 1 = normal user, 2 = student
+    avt?: string;
+    created_date?: string;
 }
 
 // =====================
@@ -29,6 +31,7 @@ export interface Institute {
     institute_id: number;
     institute_name: string;
     description?: string;
+    created_date?: string;
 }
 
 export interface InstitutePayload {
@@ -61,6 +64,7 @@ export interface UserPayload {
     email?: string;
     password?: string;
     role?: number;
+    avt?: string;
 }
 
 // =====================
@@ -75,3 +79,42 @@ export interface ApiSingleResponse<T> {
     data: T;
     message?: string;
 }
+
+// =====================
+// Teacher Profile
+// =====================
+export interface TeacherProfile {
+    teacher_id: number;
+    user_id: number;
+    department_id: number;
+    full_name: string;
+    gender?: string;
+    birth_date?: string;
+    phone?: string;
+    degree?: string;
+    academic_rank?: string;
+    created_date?: string;
+    department?: {
+        department_id: number;
+        department_name: string;
+    };
+    user?: {
+        id: number;
+        name: string;
+        email: string;
+        avt?: string;
+    };
+}
+
+export interface TeacherProfilePayload {
+    user_id?: number | string;
+    department_id?: number | string;
+    full_name: string;
+    gender?: string;
+    birth_date?: string;
+    phone?: string;
+    degree?: string;
+    academic_rank?: string;
+    avt?: string;
+}
+
