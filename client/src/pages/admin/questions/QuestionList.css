@@ -1,0 +1,200 @@
+.question-page {
+    padding: 24px;
+    background-color: var(--bg-primary);
+    min-height: 100vh;
+}
+
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.question-header h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.question-header p {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.question-table-wrapper {
+    background: var(--bg-surface);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    overflow-x: auto;
+}
+
+.question-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.question-table th,
+.question-table td {
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.question-table th {
+    background-color: var(--bg-secondary);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.question-table td {
+    color: var(--text-primary);
+    font-size: 14px;
+}
+
+.question-table tr:hover {
+    background-color: var(--bg-hover);
+}
+
+.action-group {
+    display: flex;
+    gap: 8px;
+}
+
+/* Base Modal form styles shared from SubjectList */
+.options-list {
+    margin-top: 10px;
+}
+
+.option-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.option-item input[type="text"] {
+    flex: 1;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 8px 12px;
+}
+
+.option-item input[type="radio"],
+.option-item input[type="checkbox"] {
+    width: 20px !important;
+    height: 20px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.add-option-btn {
+    margin-top: 8px;
+    font-size: 12px;
+    padding: 4px 8px;
+}
+
+.question-header-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.question-filters {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.question-filters .search-input {
+    flex: 1;
+    max-width: 400px;
+    padding: 10px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.question-filters .filter-select {
+    padding: 10px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 14px;
+    min-width: 180px;
+}
+
+.upload-help {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+    line-height: 1.6;
+}
+
+.upload-help code {
+    background: var(--bg-secondary);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.modal-content input[type="file"] {
+    margin-bottom: 16px;
+    font-size: 14px;
+}
+
+.upload-preview-loading {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+}
+
+.upload-preview {
+    margin-bottom: 16px;
+}
+
+.upload-preview strong {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.upload-preview-table-wrap {
+    max-height: 240px;
+    overflow: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+}
+
+.upload-preview-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.upload-preview-table th,
+.upload-preview-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border-color);
+    text-align: left;
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.upload-preview-table th {
+    background: var(--bg-secondary);
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+}
+
+.upload-preview-table tbody tr:hover {
+    background: var(--bg-hover);
+}
