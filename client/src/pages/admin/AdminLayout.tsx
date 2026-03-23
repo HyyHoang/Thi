@@ -105,9 +105,16 @@ function AdminLayout() {
             </NavLink>
           )}
           <div className="admin-nav-section">Chức năng khác</div>
-          <span className="admin-nav-muted">Quản lý môn học</span>
+          <NavLink to="/admin/subjects" className="admin-nav-link">
+            Quản lý môn học
+          </NavLink>
           <span className="admin-nav-muted">Quản lý lớp học phần</span>
-          <span className="admin-nav-muted">Quản lý câu hỏi</span>
+          <NavLink to="/admin/questions" className="admin-nav-link">
+            Quản lý câu hỏi
+          </NavLink>
+          <NavLink to="/admin/question-banks" className="admin-nav-link">
+            Quản lý ngân hàng câu hỏi
+          </NavLink>
           <span className="admin-nav-muted">Quản lý đề thi</span>
         </aside>
         <main className="admin-main">
