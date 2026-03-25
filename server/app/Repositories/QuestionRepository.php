@@ -22,7 +22,7 @@ class QuestionRepository extends BaseRepository implements QuestionRepositoryInt
             ->get();
     }
 
-    public function getPaginatedWithOptions(int $perPage = 15, string $search = '', ?string $type = null): LengthAwarePaginator
+    public function getPaginatedWithOptions(int $perPage = 15, string $search = '', ?string $type = null, array $filters = []): LengthAwarePaginator
     {
         return $this->model->newQuery()
             ->with(['options'])
@@ -31,6 +31,21 @@ class QuestionRepository extends BaseRepository implements QuestionRepositoryInt
             })
             ->when($type, function ($query, $type) {
                 return $query->where('Type', $type);
+            })
+            ->when(isset($filters['bank_id']), function ($query) use ($filters) {
+                return $query->where('BankID', $filters['bank_id']);
+            })
+            ->when(isset($filters['chapter_number']), function ($query) use ($filters) {
+                return $query->where('ChapterNumber', $filters['chapter_number']);
+            })
+            ->when(isset($filters['subject_id']), function ($query) use ($filters) {
+                return $query->where('SubjectID', $filters['subject_id']);
+            })
+            ->when(isset($filters['exclude_bank_id']), function ($query) use ($filters) {
+                return $query->where(function ($q) use ($filters) {
+                    $q->whereNull('BankID')
+                      ->orWhere('BankID', '!=', $filters['exclude_bank_id']);
+                });
             })
             ->orderBy('QuestionID', 'desc')
             ->paginate($perPage);

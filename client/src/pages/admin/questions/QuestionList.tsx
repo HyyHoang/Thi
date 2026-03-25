@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { fetchQuestions, createQuestion, updateQuestion, deleteQuestion, importQuestions } from '../../../features/questions/questionSlice';
+import { fetchQuestions, createQuestion, updateQuestion, deleteQuestion, importQuestions, addQuestionsToChapter } from '../../../features/questions/questionSlice';
 import { fetchSubjects } from '../../../features/subjects/subjectSlice';
 import { Question, QuestionPayload } from '../../../types';
+import questionBankService from '../../../services/questionBankService';
 import { parseFileForPreview } from '../../../utils/filePreview';
 import QuestionTable from './components/QuestionTable';
 import QuestionForm from './components/QuestionForm';
@@ -43,6 +44,15 @@ function QuestionList() {
     const [formData, setFormData] = useState<QuestionPayload>(emptyForm);
     const [formErrors, setFormErrors] = useState<Record<string, string>>({});
     const [submitError, setSubmitError] = useState('');
+
+    const [selectedIds, setSelectedIds] = useState<string[]>([]);
+    const [assignModalOpen, setAssignModalOpen] = useState(false);
+    const [assignLoading, setAssignLoading] = useState(false);
+    const [assignBanks, setAssignBanks] = useState<any[]>([]);
+    const [assignChapters, setAssignChapters] = useState<any[]>([]);
+    const [assignSelectedBank, setAssignSelectedBank] = useState<string>('');
+    const [assignSelectedChapter, setAssignSelectedChapter] = useState<string>('');
+    const [assignError, setAssignError] = useState('');
 
     const currentUser = useMemo(() => {
         try {
@@ -151,6 +161,89 @@ function QuestionList() {
         }
     };
 
+    const handleOpenAssignModal = async () => {
+        if (selectedIds.length === 0) return;
+        setAssignError('');
+        const selectedQuestions = questions.filter(q => selectedIds.includes(q.QuestionID));
+        const subjectsInSelection = new Set(selectedQuestions.map(q => q.SubjectID));
+        
+        if (subjectsInSelection.size > 1) {
+            setFlash('');
+            setAssignError('Các câu hỏi được chọn phải cùng thuộc 1 môn học.');
+            setAssignModalOpen(true);
+            return;
+        }
+
+        const subjectId = Array.from(subjectsInSelection)[0];
+        if (!subjectId) {
+            setFlash('');
+            setAssignError('Các câu hỏi được chọn không xác định môn học.');
+            setAssignModalOpen(true);
+            return;
+        }
+
+        setAssignLoading(true);
+        setAssignModalOpen(true);
+        try {
+            const res = await questionBankService.getAll() as any;
+            const fetchedBanks = Array.isArray(res) ? res : (res?.data?.data || res?.data || []);
+            const filteredBanks = fetchedBanks.filter((b: any) => b.subject_id === subjectId);
+            setAssignBanks(filteredBanks);
+            setAssignSelectedBank('');
+            setAssignChapters([]);
+            setAssignSelectedChapter('');
+        } catch (err) {
+            setAssignError('Không thể tải danh sách ngân hàng.');
+        } finally {
+            setAssignLoading(false);
+        }
+    };
+
+    const handleBankSelect = async (bankId: string) => {
+        setAssignSelectedBank(bankId);
+        setAssignSelectedChapter('');
+        setAssignChapters([]);
+        if (!bankId) return;
+        setAssignLoading(true);
+        try {
+            const res = await questionBankService.getById(bankId) as any;
+            const chapters = res?.data?.chapters || [];
+            if (chapters.length === 0) {
+                setAssignError('Ngân hàng chưa có chương nào. Hãy tạo chương trước.');
+            } else {
+                setAssignError('');
+            }
+            setAssignChapters(chapters);
+        } catch (err) {
+            setAssignError('Không thể tải danh sách chương của ngân hàng.');
+        } finally {
+            setAssignLoading(false);
+        }
+    };
+
+    const handleAssignSubmit = async () => {
+        if (!assignSelectedBank || !assignSelectedChapter) {
+            setAssignError('Vui lòng chọn ngân hàng và chương.');
+            return;
+        }
+        setAssignLoading(true);
+        try {
+            await dispatch(addQuestionsToChapter({
+                bankId: assignSelectedBank,
+                chapterId: parseInt(assignSelectedChapter, 10),
+                questionIds: selectedIds
+            })).unwrap();
+            setFlash('Đã thêm các câu hỏi vào chương thành công.');
+            setSelectedIds([]);
+            setAssignModalOpen(false);
+            dispatch(fetchQuestions({ per_page: 100, search: searchTerm, type: searchType || undefined }));
+        } catch (err: any) {
+            setAssignError(typeof err === 'string' ? err : 'Có lỗi xảy ra.');
+        } finally {
+            setAssignLoading(false);
+        }
+    };
+
     return (
         <div className="question-page">
             <div className="question-header">
@@ -160,6 +253,15 @@ function QuestionList() {
                 </div>
                 {canEditGeneral && (
                     <div className="question-header-actions">
+                        {selectedIds.length > 0 && (
+                            <button
+                                type="button"
+                                className="primary-btn"
+                                onClick={handleOpenAssignModal}
+                            >
+                                Thêm vào chương ({selectedIds.length})
+                            </button>
+                        )}
                         <button
                             type="button"
                             className="ghost-btn"
@@ -209,6 +311,8 @@ function QuestionList() {
                 onView={(q) => openModal('view', q)}
                 onEdit={(q) => openModal('edit', q)}
                 onDelete={(q) => openModal('delete', q)}
+                selectedIds={canEditGeneral ? selectedIds : undefined}
+                onSelectionChange={canEditGeneral ? setSelectedIds : undefined}
             />
 
             {modalOpen && (
@@ -296,6 +400,69 @@ function QuestionList() {
                                 </div>
                             </div>
                         )}
+                    </div>
+                </div>
+            )}
+
+            {assignModalOpen && (
+                <div className="modal-backdrop" onClick={() => !assignLoading && setAssignModalOpen(false)}>
+                    <div className="modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h3>Thêm vào chương</h3>
+                            <button type="button" className="icon-btn" onClick={() => !assignLoading && setAssignModalOpen(false)}>×</button>
+                        </div>
+                        <div className="modal-form">
+                            <p>Đã chọn <strong>{selectedIds.length}</strong> câu hỏi.</p>
+                            {assignError && <div className="alert error">{assignError}</div>}
+                            
+                            {!assignError || assignError.includes('Ngân hàng chưa có chương') ? (
+                                <>
+                                    <label>
+                                        Chọn Ngân hàng
+                                        <select
+                                            value={assignSelectedBank}
+                                            onChange={(e) => handleBankSelect(e.target.value)}
+                                            disabled={assignLoading}
+                                        >
+                                            <option value="">-- Chọn ngân hàng --</option>
+                                            {assignBanks.map((b) => (
+                                                <option key={b.bank_id} value={b.bank_id}>
+                                                    {b.bank_name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </label>
+                                    
+                                    <label>
+                                        Chọn Chương
+                                        <select
+                                            value={assignSelectedChapter}
+                                            onChange={(e) => setAssignSelectedChapter(e.target.value)}
+                                            disabled={assignLoading || !assignSelectedBank || assignChapters.length === 0}
+                                        >
+                                            <option value="">-- Chọn chương --</option>
+                                            {assignChapters.map((ch) => (
+                                                <option key={ch.chapter_number} value={ch.chapter_number}>
+                                                    Chương {ch.chapter_number}: {ch.chapter_name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </label>
+                                </>
+                            ) : null}
+
+                            <div className="modal-actions">
+                                <button type="button" className="ghost-btn" onClick={() => !assignLoading && setAssignModalOpen(false)}>Hủy</button>
+                                <button
+                                    type="button"
+                                    className="primary-btn"
+                                    disabled={assignLoading || !!assignError && !assignError.includes('Ngân hàng chưa có chương') || !assignSelectedBank || !assignSelectedChapter}
+                                    onClick={handleAssignSubmit}
+                                >
+                                    {assignLoading ? 'Đang lưu...' : 'Lưu lại'}
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}

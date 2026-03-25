@@ -28,9 +28,9 @@ class QuestionService extends BaseService implements QuestionServiceInterface
         return $this->questionRepository->getAllWithOptions();
     }
 
-    public function getPaginatedQuestions(int $perPage = 15, string $search = '', ?string $type = null): LengthAwarePaginator
+    public function getPaginatedQuestions(int $perPage = 15, string $search = '', ?string $type = null, array $filters = []): LengthAwarePaginator
     {
-        return $this->questionRepository->getPaginatedWithOptions($perPage, $search, $type);
+        return $this->questionRepository->getPaginatedWithOptions($perPage, $search, $type, $filters);
     }
 
     public function importFromCsv(UploadedFile $file, string $userId): array

@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import questionService from '../../services/questionService';
+import questionBankService from '../../services/questionBankService';
 import { Question, QuestionPayload } from '../../types';
 
 export interface QuestionsState {
@@ -106,6 +107,18 @@ export const deleteQuestion = createAsyncThunk<{ id: string }, string, { rejectV
     }
 );
 
+export const addQuestionsToChapter = createAsyncThunk<void, { bankId: string; chapterId: number; questionIds: string[] }, { rejectValue: string }>(
+    'questions/addQuestionsToChapter',
+    async ({ bankId, chapterId, questionIds }, { rejectWithValue }) => {
+        try {
+            await questionBankService.addQuestionsToChapter(bankId, chapterId, questionIds);
+        } catch (error: any) {
+            const message = error?.response?.data?.message || 'Không thể thêm câu hỏi vào chương.';
+            return rejectWithValue(message);
+        }
+    }
+);
+
 const questionSlice = createSlice({
     name: 'questions',
     initialState,
@@ -153,7 +166,7 @@ const questionSlice = createSlice({
             .addCase(updateQuestion.rejected, (state, action) => {
                 state.error = action.payload || 'Lỗi khi cập nhật';
             })
-            .addCase(importQuestions.fulfilled, (state, action) => {
+            .addCase(importQuestions.fulfilled, (state) => {
                 state.error = null;
             })
             .addCase(importQuestions.rejected, (state, action) => {

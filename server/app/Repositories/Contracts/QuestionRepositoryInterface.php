@@ -15,7 +15,7 @@ interface QuestionRepositoryInterface extends RepositoryInterface
     /**
      * Get paginated questions with options.
      */
-    public function getPaginatedWithOptions(int $perPage = 15, string $search = '', ?string $type = null): LengthAwarePaginator;
+    public function getPaginatedWithOptions(int $perPage = 15, string $search = '', ?string $type = null, array $filters = []): LengthAwarePaginator;
 
     /**
      * Get questions by UserID.

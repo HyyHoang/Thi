@@ -41,7 +41,22 @@ class QuestionController extends Controller
         $perPage = $request->query('per_page', 15);
         $search = $request->query('search', '');
         $type = $request->query('type', '');
-        $questions = $this->questionService->getPaginatedQuestions($perPage, $search, $type ?: null);
+        
+        $filters = [];
+        if ($request->has('bank_id')) {
+            $filters['bank_id'] = $request->query('bank_id');
+        }
+        if ($request->has('chapter_number')) {
+            $filters['chapter_number'] = $request->query('chapter_number');
+        }
+        if ($request->has('subject_id')) {
+            $filters['subject_id'] = $request->query('subject_id');
+        }
+        if ($request->has('exclude_bank_id')) {
+            $filters['exclude_bank_id'] = $request->query('exclude_bank_id');
+        }
+
+        $questions = $this->questionService->getPaginatedQuestions($perPage, $search, $type ?: null, $filters);
 
         return response()->json([
             'status' => 'success',

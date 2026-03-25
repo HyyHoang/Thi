@@ -8,6 +8,8 @@ interface QuestionTableProps {
     onView: (question: Question) => void;
     onEdit: (question: Question) => void;
     onDelete: (question: Question) => void;
+    selectedIds?: string[];
+    onSelectionChange?: (ids: string[]) => void;
 }
 
 function QuestionTable({
@@ -18,6 +20,8 @@ function QuestionTable({
     onView,
     onEdit,
     onDelete,
+    selectedIds = [],
+    onSelectionChange,
 }: QuestionTableProps) {
     const getTypeName = (type: string) => {
         switch (type) {
@@ -28,11 +32,42 @@ function QuestionTable({
         }
     };
 
+    const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!onSelectionChange) return;
+        if (e.target.checked) {
+            onSelectionChange(questions.map((q) => q.QuestionID));
+        } else {
+            onSelectionChange([]);
+        }
+    };
+
+    const handleSelectOne = (id: string) => {
+        if (!onSelectionChange) return;
+        if (selectedIds.includes(id)) {
+            onSelectionChange(selectedIds.filter((x) => x !== id));
+        } else {
+            onSelectionChange([...selectedIds, id]);
+        }
+    };
+
+    const isAllSelected = questions.length > 0 && questions.every(q => selectedIds.includes(q.QuestionID));
+
+    const colSpan = onSelectionChange ? 6 : 5;
+
     return (
         <div className="question-table-wrapper">
             <table className="question-table">
                 <thead>
                     <tr>
+                        {onSelectionChange && (
+                            <th style={{ width: '40px' }}>
+                                <input
+                                    type="checkbox"
+                                    checked={isAllSelected}
+                                    onChange={handleSelectAll}
+                                />
+                            </th>
+                        )}
                         <th>Mã CH</th>
                         <th>Nội dung</th>
                         <th>Loại</th>
@@ -43,14 +78,14 @@ function QuestionTable({
                 <tbody>
                     {loading && (
                         <tr>
-                            <td colSpan={5} className="muted">
+                            <td colSpan={colSpan} className="muted">
                                 Đang tải dữ liệu...
                             </td>
                         </tr>
                     )}
                     {!loading && questions.length === 0 && (
                         <tr>
-                            <td colSpan={5} className="muted">
+                            <td colSpan={colSpan} className="muted">
                                 Chưa có câu hỏi nào.
                             </td>
                         </tr>
@@ -58,6 +93,15 @@ function QuestionTable({
                     {!loading &&
                         questions.map((q) => (
                             <tr key={q.QuestionID}>
+                                {onSelectionChange && (
+                                    <td>
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedIds.includes(q.QuestionID)}
+                                            onChange={() => handleSelectOne(q.QuestionID)}
+                                        />
+                                    </td>
+                                )}
                                 <td>{q.QuestionID}</td>
                                 <td>{q.Content.length > 50 ? q.Content.substring(0, 50) + '...' : q.Content}</td>
                                 <td>{getTypeName(q.Type)}</td>

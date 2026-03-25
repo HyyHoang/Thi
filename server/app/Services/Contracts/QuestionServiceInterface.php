@@ -16,7 +16,7 @@ interface QuestionServiceInterface extends ServiceInterface
     /**
      * Get paginated questions.
      */
-    public function getPaginatedQuestions(int $perPage = 15, string $search = '', ?string $type = null): LengthAwarePaginator;
+    public function getPaginatedQuestions(int $perPage = 15, string $search = '', ?string $type = null, array $filters = []): LengthAwarePaginator;
 
     /**
      * Import questions from CSV file.
