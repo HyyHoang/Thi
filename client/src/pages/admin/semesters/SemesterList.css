@@ -1,0 +1,47 @@
+.semester-page {
+  display: grid;
+  gap: 16px;
+}
+
+.semester-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.semester-header h2 {
+  margin: 0 0 4px;
+}
+
+.semester-header p {
+  margin: 0;
+  color: #5f6773;
+}
+
+.semester-table-wrapper {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e7eaf0;
+  overflow: auto;
+}
+
+.semester-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+}
+
+.semester-table th,
+.semester-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eef1f5;
+  text-align: left;
+  vertical-align: top;
+}
+
+.semester-table thead th {
+  background: #f8fafc;
+  font-weight: 600;
+  color: #374151;
+}
