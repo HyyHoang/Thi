@@ -22,6 +22,8 @@ export interface User {
     role: number; // 0 = admin, 1 = normal user, 2 = student
     avt?: string;
     created_date?: string;
+    Username?: string;
+    Email?: string;
 }
 
 // =====================
@@ -48,12 +50,31 @@ export interface Department {
     institute_id: string;
     institute_name?: string;
     description?: string;
+    DepartmentName?: string;
 }
 
 export interface DepartmentPayload {
     department_name: string;
     institute_id: string;
     description?: string;
+}
+
+// =====================
+// Semester
+// =====================
+export interface Semester {
+    semester_id: string;
+    semester_name: string;
+    academic_year: string;
+    start_date: string;
+    end_date: string;
+}
+
+export interface SemesterPayload {
+    semester_name: string;
+    academic_year: string;
+    start_date: string;
+    end_date: string;
 }
 
 // =====================
@@ -218,4 +239,58 @@ export interface QuestionChapterPayload {
     chapter_number: number;
     chapter_name: string;
     description?: string;
+}
+
+// =====================
+// Student Profile
+// =====================
+export interface StudentProfile {
+    StudentID: string;
+    UserID?: string | null;
+    DepartmentID?: string | null;
+    FullName: string;
+    EnrollmentYear: number;
+    Status: number;
+    user?: User;
+    department?: Department;
+}
+
+export interface StudentProfilePayload {
+    UserID?: string | null;
+    DepartmentID?: string | null;
+    FullName: string;
+    EnrollmentYear: number;
+}
+
+// =====================
+// Course Section
+// =====================
+export interface CourseSection {
+    SectionID: string;
+    SubjectID: string;
+    SemesterID: string;
+    TeacherID: string;
+    SectionName: string;
+    MaxStudent: number;
+    CreatedDate?: string;
+    Subject?: {
+        SubjectID: string;
+        SubjectName: string;
+    };
+    Semester?: {
+        SemesterID: string;
+        SemesterName: string;
+    };
+    Teacher?: {
+        TeacherID: string;
+        FullName: string;
+    };
+}
+
+export interface CourseSectionPayload {
+    SectionName: string;
+    SubjectID: string;
+    SemesterID: string;
+    TeacherID: string;
+    MaxStudent: number | string;
 }

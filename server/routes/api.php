@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\SubjectController;
 use App\Http\Controllers\Api\QuestionController;
 use App\Http\Controllers\Api\QuestionBankController;
 use App\Http\Controllers\Api\SemesterController;
+use App\Http\Controllers\Api\CourseSectionController;
 
 Route::post('/auth/login', [AuthController::class, 'login']);
 
@@ -52,6 +53,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/profile/me', [TeacherProfileController::class, 'updateMyProfile']);
         Route::get('/student-profiles', [\App\Http\Controllers\Api\StudentProfileController::class, 'index']);
         Route::get('/student-profiles/{id}', [\App\Http\Controllers\Api\StudentProfileController::class, 'show']);
+
+        Route::get('/course-sections', [CourseSectionController::class, 'index']);
+        Route::get('/course-sections/{id}', [CourseSectionController::class, 'show']);
     });
 
     Route::middleware('role.admin')->group(function () {
@@ -86,5 +90,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/student-profiles', [\App\Http\Controllers\Api\StudentProfileController::class, 'store']);
         Route::put('/student-profiles/{id}', [\App\Http\Controllers\Api\StudentProfileController::class, 'update']);
         Route::delete('/student-profiles/{id}', [\App\Http\Controllers\Api\StudentProfileController::class, 'destroy']);
+
+        Route::post('/course-sections', [CourseSectionController::class, 'store']);
+        Route::put('/course-sections/{id}', [CourseSectionController::class, 'update']);
+        Route::delete('/course-sections/{id}', [CourseSectionController::class, 'destroy']);
     });
 });

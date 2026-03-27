@@ -79,6 +79,10 @@ class AppServiceProvider extends ServiceProvider
         // Student Profile
         $this->app->bind(\App\Repositories\Contracts\StudentProfileRepositoryInterface::class, \App\Repositories\StudentProfileRepository::class);
         $this->app->bind(\App\Services\Contracts\StudentProfileServiceInterface::class, \App\Services\StudentProfileService::class);
+
+        // Course Section
+        $this->app->bind(\App\Repositories\Contracts\CourseSectionRepositoryInterface::class, \App\Repositories\CourseSectionRepository::class);
+        $this->app->bind(\App\Services\Contracts\CourseSectionServiceInterface::class, \App\Services\CourseSectionService::class);
     }
 
     /**

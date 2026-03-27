@@ -99,16 +99,24 @@ function AdminLayout() {
           <NavLink to="/admin/departments" className="admin-nav-link">
             Quản lý khoa
           </NavLink>
+          <NavLink to="/admin/semesters" className="admin-nav-link">
+            Quản lý học kỳ
+          </NavLink>
           {isAdmin && (
             <NavLink to="/admin/teacher-profiles" className="admin-nav-link">
               Hồ sơ giảng viên
             </NavLink>
           )}
+          <NavLink to="/admin/student-profiles" className="admin-nav-link">
+            Quản lý sinh viên
+          </NavLink>
           <div className="admin-nav-section">Chức năng khác</div>
           <NavLink to="/admin/subjects" className="admin-nav-link">
             Quản lý môn học
           </NavLink>
-          <span className="admin-nav-muted">Quản lý lớp học phần</span>
+          <NavLink to="/admin/course-sections" className="admin-nav-link">
+            Quản lý lớp học phần
+          </NavLink>
           <NavLink to="/admin/questions" className="admin-nav-link">
             Quản lý câu hỏi
           </NavLink>

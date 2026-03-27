@@ -19,8 +19,8 @@ return new class extends Migration
             $table->integer('EnrollmentYear');
             $table->tinyInteger('Status')->default(1)->comment('1: đang học, 2: bảo lưu, 3: bỏ học');
 
-            $table->foreign('UserID')->references('UserID')->on('Users')->onDelete('set null');
-            $table->foreign('DepartmentID')->references('DepartmentID')->on('Departments')->onDelete('set null');
+            $table->foreign('UserID')->references('UserID')->on('User')->onDelete('set null');
+            $table->foreign('DepartmentID')->references('DepartmentID')->on('Department')->onDelete('set null');
         });
     }
 
