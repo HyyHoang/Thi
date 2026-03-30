@@ -1,4 +1,4 @@
-import axiosClient from '../api/axiosClient';
+import axiosClient from '../lib/api/axiosClient';
 import { StudentProfile, StudentProfilePayload } from '../types';
 
 export const studentProfileService = {

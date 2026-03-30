@@ -1,4 +1,4 @@
-import axiosClient from '../api/axiosClient';
+import axiosClient from '../lib/api/axiosClient';
 import { QuestionBankCreatePayload, QuestionBankPayload, QuestionChapterPayload } from '../types';
 
 const questionBankService = {
@@ -14,6 +14,8 @@ const questionBankService = {
         axiosClient.put(`/question-banks/${bankId}/chapters/${chapterId}`, payload),
     removeChapter: (bankId: string, chapterId: number) =>
         axiosClient.delete(`/question-banks/${bankId}/chapters/${chapterId}`),
+    addQuestionsToChapter: (bankId: string, chapterId: number, questionIds: string[]) =>
+        axiosClient.post(`/question-banks/${bankId}/chapters/${chapterId}/questions`, { question_ids: questionIds }),
 };
 
 export default questionBankService;

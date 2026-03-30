@@ -1,4 +1,4 @@
-import axiosClient from '../api/axiosClient';
+import axiosClient from '../lib/api/axiosClient';
 import { SemesterPayload } from '../types';
 
 const semesterService = {

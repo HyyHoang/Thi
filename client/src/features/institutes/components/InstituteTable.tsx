@@ -1,5 +1,7 @@
-import { Institute } from '../../../../types';
+import { Institute } from '../../../types';
 
+import { Button } from '../../../components/ui/Button';
+import { MdVisibility, MdEdit, MdDelete } from 'react-icons/md';
 interface InstituteTableProps {
     institutes: Institute[];
     loading: boolean;
@@ -19,7 +21,7 @@ function InstituteTable({
 }: InstituteTableProps) {
     return (
         <div className="institute-table-wrapper">
-            <table className="institute-table">
+            <table className="data-table">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -50,30 +52,18 @@ function InstituteTable({
                                 <td>{inst.institute_name}</td>
                                 <td>{inst.description || '-'}</td>
                                 <td>
-                                    <div className="action-group">
-                                        <button
-                                            type="button"
-                                            className="ghost-btn"
-                                            onClick={() => onView(inst)}
-                                        >
-                                            Xem
-                                        </button>
+                                    <div className="action-group" style={{ display: 'flex', gap: '8px' }}>
+                                        <Button variant="ghost" onClick={() => onView(inst)} title="Xem chi tiết" style={{ padding: '6px 10px' }}>
+                                            <MdVisibility size={18} />
+                                        </Button>
                                         {canEdit && (
                                             <>
-                                                <button
-                                                    type="button"
-                                                    className="ghost-btn"
-                                                    onClick={() => onEdit(inst)}
-                                                >
-                                                    Sửa
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    className="danger-btn"
-                                                    onClick={() => onDelete(inst)}
-                                                >
-                                                    Xóa
-                                                </button>
+                                                <Button variant="secondary" onClick={() => onEdit(inst)} title="Sửa" style={{ padding: '6px 10px' }}>
+                                            <MdEdit size={18} color="#2563eb" />
+                                        </Button>
+                                                <Button variant="ghost" onClick={() => onDelete(inst)} title="Xóa" style={{ padding: '6px 10px', color: '#dc2626' }}>
+                                            <MdDelete size={18} />
+                                        </Button>
                                             </>
                                         )}
                                     </div>

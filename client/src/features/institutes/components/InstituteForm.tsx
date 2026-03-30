@@ -1,12 +1,12 @@
-import React from 'react';
-import { InstitutePayload } from '../../../../types';
+import { InstitutePayload } from '../../../types';
+import { Button } from '../../../components/ui/Button';
 
 interface InstituteFormProps {
     values: InstitutePayload;
     errors: Record<string, string>;
     submitError?: string;
     mode: 'create' | 'edit';
-    onChange: (field: keyof InstitutePayload, value: string) => void;
+    onChange: (field: string | number | symbol, value: string) => void;
     onSubmit: () => void;
     onCancel: () => void;
 }
@@ -53,13 +53,13 @@ function InstituteForm({
                 {errors.description && <span className="field-error">{errors.description}</span>}
             </label>
 
-            <div className="modal-actions">
-                <button type="button" className="ghost-btn" onClick={onCancel}>
+            <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+                <Button type="button" variant="ghost" onClick={onCancel}>
                     Hủy
-                </button>
-                <button type="submit" className="primary-btn">
+                </Button>
+                <Button type="submit" variant="primary">
                     {mode === 'create' ? 'Lưu' : 'Cập nhật'}
-                </button>
+                </Button>
             </div>
         </form>
     );

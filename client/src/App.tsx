@@ -1,19 +1,19 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login.tsx';
 import ProtectedRoute from './components/ProtectedRoute.tsx';
-import AdminLayout from './pages/admin/AdminLayout.tsx';
-import AdminHome from './pages/admin/AdminHome.tsx';
-import UserList from './pages/admin/users/UserList.tsx';
-import InstituteList from './pages/admin/institutes/InstituteList.tsx';
-import DepartmentList from './pages/admin/departments/DepartmentList.tsx';
-import SemesterList from './pages/admin/semesters/SemesterList.tsx';
-import TeacherProfileList from './pages/admin/teacher-profiles/TeacherProfileList.tsx';
-import MyProfile from './pages/admin/teacher-profiles/MyProfile.tsx';
-import SubjectList from './pages/admin/subjects/SubjectList.tsx';
-import QuestionList from './pages/admin/questions/QuestionList.tsx';
-import QuestionBankList from './pages/admin/question-banks/QuestionBankList.tsx';
-import StudentProfileList from './pages/admin/student-profiles/StudentProfileList.tsx';
-import CourseSectionList from './pages/admin/course-sections/CourseSectionList.tsx';
+import AdminLayout from './components/layout/AdminLayout.tsx';
+import AdminHome from './components/layout/AdminHome.tsx';
+import UserList from './features/users/pages/UserList.tsx';
+import InstituteList from './features/institutes/pages/InstituteList.tsx';
+import DepartmentList from './features/departments/pages/DepartmentList.tsx';
+import SemesterList from './features/semesters/pages/SemesterList.tsx';
+import TeacherProfileList from './features/teacher-profiles/pages/TeacherProfileList.tsx';
+import MyProfile from './features/teacher-profiles/pages/MyProfile.tsx';
+import SubjectList from './features/subjects/pages/SubjectList.tsx';
+import QuestionList from './features/questions/pages/QuestionList.tsx';
+import QuestionBankList from './features/question-banks/pages/QuestionBankList.tsx';
+import StudentProfileList from './features/student-profiles/pages/StudentProfileList.tsx';
+import CourseSectionList from './features/course-sections/pages/CourseSectionList.tsx';
 import './App.css';
 
 function App() {

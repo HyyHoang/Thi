@@ -260,6 +260,7 @@ export interface StudentProfilePayload {
     DepartmentID?: string | null;
     FullName: string;
     EnrollmentYear: number;
+    Status?: number;
 }
 
 // =====================

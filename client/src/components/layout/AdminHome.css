@@ -1,0 +1,407 @@
+﻿/* ═══════════════════════════════════════════════
+   ADMIN HOME — Elevated Design
+═══════════════════════════════════════════════ */
+
+/* ── Layout ── */
+.admin-home {
+  padding: clamp(16px, 3vw, 32px);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.admin-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.admin-home h2 {
+  margin: 0 0 0.3rem;
+  font-size: clamp(1.25rem, 3.5vw, 1.6rem);
+  color: #1e293b;
+  font-weight: 700;
+}
+
+.admin-welcome {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.98rem;
+}
+
+.admin-users-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: #0f3460;
+  color: #fff;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.18s, transform 0.15s, box-shadow 0.18s;
+  box-shadow: 0 2px 8px rgba(15, 52, 96, 0.25);
+}
+.admin-users-btn:hover {
+  background: #1a4a80;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(15, 52, 96, 0.3);
+}
+
+/* ── Widgets grid ── */
+.admin-widgets {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.admin-widget {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+
+/* ═══════════════════════════════════
+   CALENDAR
+═══════════════════════════════════ */
+.cal-wrapper {
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  height: 100%;
+}
+
+/* Hero banner */
+.cal-hero {
+  position: relative;
+  background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+  padding: 22px 24px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  overflow: hidden;
+}
+
+.cal-hero-orb {
+  position: absolute;
+  width: 140px; height: 140px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  top: -50px; right: -30px;
+}
+.cal-hero-orb2 {
+  position: absolute;
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  bottom: -20px; right: 60px;
+}
+
+.cal-hero-left {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  z-index: 1;
+}
+.cal-hero-num {
+  font-size: 3.2rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+  letter-spacing: -2px;
+}
+.cal-hero-slash {
+  font-size: 2rem;
+  color: rgba(255,255,255,0.4);
+  font-weight: 300;
+}
+.cal-hero-month-sm {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.6);
+  line-height: 1;
+}
+.cal-hero-right {
+  z-index: 1;
+}
+.cal-hero-dayname {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+}
+.cal-hero-year {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.55);
+  margin-top: 2px;
+}
+
+/* Body */
+.cal-body {
+  padding: 16px 18px 18px;
+}
+
+.cal-nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.cal-nav-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #334155;
+}
+.cal-nav {
+  width: 28px; height: 28px;
+  background: #f1f5f9;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #475569;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s, color 0.15s;
+}
+.cal-nav:hover { background: #e2e8f0; color: #0f3460; }
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+}
+
+.cal-wday {
+  text-align: center;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #94a3b8;
+  padding: 3px 0 7px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.cal-wend-h { color: #f87171; }
+
+.cal-cell {
+  text-align: center;
+  padding: 6px 2px;
+  font-size: 0.82rem;
+  color: #475569;
+  border-radius: 8px;
+  transition: background 0.12s;
+  cursor: default;
+  font-variant-numeric: tabular-nums;
+}
+.cal-cell:not(.cal-null):hover { background: #f1f5f9; }
+.cal-null { visibility: hidden; }
+.cal-wend { color: #ef4444; }
+.cal-today {
+  background: linear-gradient(135deg, #0f3460, #1e5fa8) !important;
+  color: #fff !important;
+  font-weight: 800;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(15, 52, 96, 0.35);
+}
+
+/* ═══════════════════════════════════
+   WEATHER CARD
+═══════════════════════════════════ */
+.w-card {
+  border-radius: 20px;
+  padding: 22px 22px 0;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-height: 320px;
+}
+
+/* Background themes */
+.w-bg-sunny {
+  background: linear-gradient(145deg, #f59e0b 0%, #ef8c0a 40%, #dc6b0a 100%);
+}
+.w-bg-cloudy {
+  background: linear-gradient(145deg, #64748b 0%, #475569 60%, #334155 100%);
+}
+.w-bg-foggy {
+  background: linear-gradient(145deg, #94a3b8 0%, #64748b 100%);
+}
+.w-bg-rainy {
+  background: linear-gradient(145deg, #1e40af 0%, #1e3a8a 60%, #172554 100%);
+}
+.w-bg-snowy {
+  background: linear-gradient(145deg, #7dd3fc 0%, #38bdf8 50%, #0ea5e9 100%);
+}
+.w-bg-stormy {
+  background: linear-gradient(145deg, #1e1b4b 0%, #312e81 50%, #1e1b4b 100%);
+}
+
+/* Glow orb */
+.w-glow {
+  position: absolute;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  top: -60px; right: -50px;
+  pointer-events: none;
+}
+
+/* Header row */
+.w-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 1;
+}
+.w-loc {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.8);
+  background: rgba(0,0,0,0.12);
+  padding: 4px 10px;
+  border-radius: 20px;
+  backdrop-filter: blur(4px);
+}
+.w-icon {
+  font-size: 2.8rem;
+  line-height: 1;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.2));
+}
+
+/* Temp block */
+.w-temp-block {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  margin-bottom: 18px;
+  position: relative;
+  z-index: 1;
+}
+.w-temp {
+  font-size: 4.5rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -3px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+.w-unit {
+  font-size: 1.6rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  opacity: 0.8;
+}
+.w-desc-block {
+  padding-bottom: 6px;
+}
+.w-desc {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.w-feels {
+  font-size: 0.78rem;
+  opacity: 0.7;
+  margin-top: 3px;
+}
+
+/* Pills */
+.w-pills {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+  position: relative;
+  z-index: 1;
+}
+.w-pill {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(6px);
+  border-radius: 14px;
+  padding: 10px 6px;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+.w-pill-icon { font-size: 1.1rem; }
+.w-pill-val {
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.w-pill-val small { font-size: 0.65rem; font-weight: 400; }
+.w-pill-lbl {
+  font-size: 0.65rem;
+  opacity: 0.75;
+  letter-spacing: 0.03em;
+}
+
+/* Sparkline */
+.w-spark {
+  margin: 0 -22px;
+  position: relative;
+  z-index: 1;
+}
+.w-spark svg {
+  display: block;
+  width: 100%;
+  height: 48px;
+}
+.w-spark-labels {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 16px 14px;
+  font-size: 0.65rem;
+  opacity: 0.6;
+}
+
+/* Loading / error */
+.w-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: 200px;
+  color: #64748b;
+  font-size: 0.875rem;
+}
+.w-dots {
+  display: flex;
+  gap: 6px;
+}
+.w-dots span {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #cbd5e1;
+  animation: wdot 1.2s infinite ease-in-out;
+}
+.w-dots span:nth-child(2) { animation-delay: 0.2s; }
+.w-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes wdot {
+  0%, 80%, 100% { transform: scale(0.7); opacity: 0.5; }
+  40% { transform: scale(1); opacity: 1; }
+}
+.w-loading p { margin: 0; }
+.w-error {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 200px; color: #ef4444; font-size: 0.875rem;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .admin-widgets { grid-template-columns: 1fr; }
+  .admin-top { flex-direction: column; }
+  .admin-users-btn { width: 100%; justify-content: center; }
+  .w-temp { font-size: 3.5rem; }
+}
