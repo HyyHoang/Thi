@@ -1,0 +1,178 @@
+/* SearchFilterBar Styles */
+
+.sfb-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 14px 20px;
+  background: var(--bg-surface, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: var(--radius-md, 10px);
+  box-shadow: var(--shadow-sm, 0 1px 2px rgba(0,0,0,0.05));
+}
+
+.sfb-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+/* Search input wrapper */
+.sfb-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 220px;
+  flex: 1;
+  max-width: 380px;
+}
+
+.sfb-search-icon {
+  position: absolute;
+  left: 10px;
+  color: var(--text-muted, #94a3b8);
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.sfb-search-input {
+  width: 100%;
+  padding: 8px 34px 8px 34px;
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: var(--radius-sm, 6px);
+  font-size: 0.88rem;
+  font-family: inherit;
+  color: var(--text-main, #0f172a);
+  background: var(--bg-body, #f8fafc);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.sfb-search-input:focus {
+  border-color: var(--color-primary, #4f46e5);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+  background: #ffffff;
+}
+
+.sfb-search-input::placeholder {
+  color: var(--text-muted, #94a3b8);
+}
+
+.sfb-clear-btn {
+  position: absolute;
+  right: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted, #94a3b8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  border-radius: 50%;
+  transition: color 0.15s, background 0.15s;
+}
+
+.sfb-clear-btn:hover {
+  color: var(--text-secondary, #475569);
+  background: var(--bg-surface-hover, #f1f5f9);
+}
+
+/* Filter section */
+.sfb-filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.sfb-filter-icon {
+  color: var(--text-muted, #94a3b8);
+  flex-shrink: 0;
+}
+
+.sfb-filter-item {
+  display: flex;
+  align-items: center;
+}
+
+.sfb-select {
+  padding: 8px 30px 8px 10px;
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: var(--radius-sm, 6px);
+  font-size: 0.85rem;
+  font-family: inherit;
+  color: var(--text-main, #0f172a);
+  background: var(--bg-body, #f8fafc);
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  max-width: 200px;
+}
+
+.sfb-select:focus {
+  border-color: var(--color-primary, #4f46e5);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+  background-color: #ffffff;
+}
+
+/* Reset button */
+.sfb-reset-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 7px 12px;
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: var(--radius-sm, 6px);
+  background: #fff;
+  color: var(--text-secondary, #475569);
+  font-size: 0.82rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.sfb-reset-btn:hover {
+  background: var(--bg-surface-hover, #f1f5f9);
+  border-color: #cbd5e1;
+  color: var(--text-main, #0f172a);
+}
+
+/* Result count badge */
+.sfb-result-count {
+  font-size: 0.82rem;
+  color: var(--text-secondary, #475569);
+  white-space: nowrap;
+}
+
+.sfb-result-count strong {
+  color: var(--color-primary, #4f46e5);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .sfb-wrapper {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px;
+  }
+  .sfb-search {
+    max-width: 100%;
+  }
+  .sfb-select {
+    max-width: 100%;
+  }
+  .sfb-result-count {
+    text-align: center;
+  }
+}

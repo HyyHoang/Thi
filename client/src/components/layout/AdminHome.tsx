@@ -294,9 +294,9 @@ export default function AdminHome() {
     <div className="admin-home">
       <div className="admin-top">
         <div className="admin-greeting">
-          <h2>Trang chủ quản trị</h2>
+          <h2>{user.role === 2 ? 'Trang chủ sinh viên' : 'Trang chủ quản trị'}</h2>
           <p className="admin-welcome">
-            Xin chào, <strong>{user.username || user.email || 'Admin'}</strong>! 👋
+            Xin chào, <strong>{user.FullName || user.username || user.email || 'Người dùng'}</strong>! 👋
           </p>
         </div>
       </div>

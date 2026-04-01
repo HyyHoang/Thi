@@ -13,6 +13,7 @@ import {
   MdQuiz, 
   MdLibraryBooks, 
   MdDescription,
+  MdAssignment,
   MdArrowDropDown,
   MdLogout,
   MdMenu
@@ -58,6 +59,7 @@ function AdminLayout() {
   };
 
   const isAdmin = user?.role === 0;
+  const isStudent = user?.role === 2;
 
   return (
     <div className={`admin-layout ${sidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
@@ -121,44 +123,60 @@ function AdminLayout() {
           <NavLink to="/admin" end className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`} title="Dashboard">
             <MdDashboard className="admin-nav-link-icon" /> <span className="admin-nav-text">Dashboard</span>
           </NavLink>
-          {isAdmin && (
-            <NavLink to="/admin/users" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`} title="Quản lý tài khoản">
-              <MdSupervisedUserCircle className="admin-nav-link-icon" /> <span className="admin-nav-text">Quản lý tài khoản</span>
+          {!isStudent && (
+            <>
+              {isAdmin && (
+                <NavLink to="/admin/users" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`} title="Quản lý tài khoản">
+                  <MdSupervisedUserCircle className="admin-nav-link-icon" /> <span className="admin-nav-text">Quản lý tài khoản</span>
+                </NavLink>
+              )}
+              <NavLink to="/admin/institutes" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`} title="Quản lý viện">
+                <MdAccountBalance className="admin-nav-link-icon" /> <span className="admin-nav-text">Quản lý viện</span>
+              </NavLink>
+              <NavLink to="/admin/departments" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`} title="Quản lý khoa">
+                <MdBusiness className="admin-nav-link-icon" /> <span className="admin-nav-text">Quản lý khoa</span>
+              </NavLink>
+              <NavLink to="/admin/semesters" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`} title="Quản lý học kỳ">
+                <MdDateRange className="admin-nav-link-icon" /> <span className="admin-nav-text">Quản lý học kỳ</span>
+              </NavLink>
+              {isAdmin && (
+                <NavLink to="/admin/teacher-profiles" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`} title="Hồ sơ giảng viên">
+                  <MdPersonOutline className="admin-nav-link-icon" /> <span className="admin-nav-text">Hồ sơ giảng viên</span>
+                </NavLink>
+              )}
+              <NavLink to="/admin/student-profiles" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`} title="Quản lý sinh viên">
+                <MdPeople className="admin-nav-link-icon" /> <span className="admin-nav-text">Quản lý sinh viên</span>
+              </NavLink>
+              <div className="admin-nav-section"><span className="admin-nav-text">Chức năng khác</span></div>
+              <NavLink to="/admin/subjects" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`} title="Quản lý môn học">
+                <MdMenuBook className="admin-nav-link-icon" /> <span className="admin-nav-text">Quản lý môn học</span>
+              </NavLink>
+              <NavLink to="/admin/course-sections" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`} title="Quản lý lớp học phần">
+                <MdClass className="admin-nav-link-icon" /> <span className="admin-nav-text">Quản lý lớp học phần</span>
+              </NavLink>
+              <NavLink to="/admin/enrollments" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`} title="Quản lý đăng ký">
+                <MdAssignment className="admin-nav-link-icon" /> <span className="admin-nav-text">Quản lý đăng ký</span>
+              </NavLink>
+              <NavLink to="/admin/questions" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`} title="Quản lý câu hỏi">
+                <MdQuiz className="admin-nav-link-icon" /> <span className="admin-nav-text">Quản lý câu hỏi</span>
+              </NavLink>
+              <NavLink to="/admin/question-banks" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`} title="Quản lý ngân hàng câu hỏi">
+                <MdLibraryBooks className="admin-nav-link-icon" /> <span className="admin-nav-text">Quản lý ngân hàng câu hỏi</span>
+              </NavLink>
+            </>
+          )}
+
+          {isStudent && (
+            <NavLink to="/admin/course-registration" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`} title="Đăng ký học phần">
+              <MdAssignment className="admin-nav-link-icon" /> <span className="admin-nav-text">Đăng ký học phần</span>
             </NavLink>
           )}
-          <NavLink to="/admin/institutes" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`} title="Quản lý viện">
-            <MdAccountBalance className="admin-nav-link-icon" /> <span className="admin-nav-text">Quản lý viện</span>
-          </NavLink>
-          <NavLink to="/admin/departments" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`} title="Quản lý khoa">
-            <MdBusiness className="admin-nav-link-icon" /> <span className="admin-nav-text">Quản lý khoa</span>
-          </NavLink>
-          <NavLink to="/admin/semesters" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`} title="Quản lý học kỳ">
-            <MdDateRange className="admin-nav-link-icon" /> <span className="admin-nav-text">Quản lý học kỳ</span>
-          </NavLink>
-          {isAdmin && (
-            <NavLink to="/admin/teacher-profiles" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`} title="Hồ sơ giảng viên">
-              <MdPersonOutline className="admin-nav-link-icon" /> <span className="admin-nav-text">Hồ sơ giảng viên</span>
+
+          {!isStudent && (
+            <NavLink to="/admin/exams" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`} title="Quản lý đề thi">
+              <MdDescription className="admin-nav-link-icon" /> <span className="admin-nav-text">Quản lý đề thi</span>
             </NavLink>
           )}
-          <NavLink to="/admin/student-profiles" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`} title="Quản lý sinh viên">
-            <MdPeople className="admin-nav-link-icon" /> <span className="admin-nav-text">Quản lý sinh viên</span>
-          </NavLink>
-          <div className="admin-nav-section"><span className="admin-nav-text">Chức năng khác</span></div>
-          <NavLink to="/admin/subjects" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`} title="Quản lý môn học">
-            <MdMenuBook className="admin-nav-link-icon" /> <span className="admin-nav-text">Quản lý môn học</span>
-          </NavLink>
-          <NavLink to="/admin/course-sections" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`} title="Quản lý lớp học phần">
-            <MdClass className="admin-nav-link-icon" /> <span className="admin-nav-text">Quản lý lớp học phần</span>
-          </NavLink>
-          <NavLink to="/admin/questions" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`} title="Quản lý câu hỏi">
-            <MdQuiz className="admin-nav-link-icon" /> <span className="admin-nav-text">Quản lý câu hỏi</span>
-          </NavLink>
-          <NavLink to="/admin/question-banks" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`} title="Quản lý ngân hàng câu hỏi">
-            <MdLibraryBooks className="admin-nav-link-icon" /> <span className="admin-nav-text">Quản lý ngân hàng câu hỏi</span>
-          </NavLink>
-          <span className="admin-nav-muted" title="Quản lý đề thi">
-            <MdDescription className="admin-nav-link-icon" /> <span className="admin-nav-text">Quản lý đề thi</span>
-          </span>
         </aside>
         <main className="admin-main">
           <div className="admin-main-content">

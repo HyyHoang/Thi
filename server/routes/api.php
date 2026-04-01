@@ -11,6 +11,8 @@ use App\Http\Controllers\Api\QuestionController;
 use App\Http\Controllers\Api\QuestionBankController;
 use App\Http\Controllers\Api\SemesterController;
 use App\Http\Controllers\Api\CourseSectionController;
+use App\Http\Controllers\Api\EnrollmentController;
+use App\Http\Controllers\Api\ExamController;
 
 Route::post('/auth/login', [AuthController::class, 'login']);
 
@@ -18,7 +20,27 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/auth/me', [AuthController::class, 'me']);
     Route::post('/auth/logout', [AuthController::class, 'logout']);
 
+    // Enrollments (Shared - Admin & Teacher read)
+    Route::get('/enrollments', [EnrollmentController::class, 'index']);
+    Route::get('/enrollments/{id}', [EnrollmentController::class, 'show']);
+
+    // Course Sections (Shared)
+    Route::get('/course-sections', [CourseSectionController::class, 'index']);
+    Route::get('/course-sections/{id}', [CourseSectionController::class, 'show']);
+
     Route::middleware('role.admin_or_teacher')->group(function () {
+        // Exam helpers (phải đặt TRƯỚC route {id} để tránh conflict)
+        Route::get('/exams/current-semester', [ExamController::class, 'currentSemester']);
+        Route::get('/exams/subjects-for-semester', [ExamController::class, 'subjectsForSemester']);
+        Route::get('/exams/banks-for-subject/{subjectId}', [ExamController::class, 'banksForSubject']);
+
+        // Exam CRUD
+        Route::get('/exams', [ExamController::class, 'index']);
+        Route::get('/exams/{id}', [ExamController::class, 'show']);
+        Route::post('/exams', [ExamController::class, 'store']);
+        Route::put('/exams/{id}', [ExamController::class, 'update']);
+        Route::delete('/exams/{id}', [ExamController::class, 'destroy']);
+
         Route::get('/institutes', [InstituteController::class, 'index']);
         Route::get('/institutes/{id}', [InstituteController::class, 'show']);
 
@@ -54,8 +76,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/student-profiles', [\App\Http\Controllers\Api\StudentProfileController::class, 'index']);
         Route::get('/student-profiles/{id}', [\App\Http\Controllers\Api\StudentProfileController::class, 'show']);
 
-        Route::get('/course-sections', [CourseSectionController::class, 'index']);
-        Route::get('/course-sections/{id}', [CourseSectionController::class, 'show']);
     });
 
     Route::middleware('role.admin')->group(function () {
@@ -94,5 +114,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/course-sections', [CourseSectionController::class, 'store']);
         Route::put('/course-sections/{id}', [CourseSectionController::class, 'update']);
         Route::delete('/course-sections/{id}', [CourseSectionController::class, 'destroy']);
+
+        // Enrollments (Admin only)
+        Route::post('/enrollments', [EnrollmentController::class, 'store']);
+        Route::put('/enrollments/{id}', [EnrollmentController::class, 'update']);
+        Route::delete('/enrollments/{id}', [EnrollmentController::class, 'destroy']);
     });
 });

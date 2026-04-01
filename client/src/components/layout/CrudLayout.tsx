@@ -7,6 +7,8 @@ interface CrudLayoutProps {
   title: string;
   description: string;
   action?: React.ReactNode;
+  toolbar?: React.ReactNode;
+  pagination?: React.ReactNode;
   flash?: string;
   error?: string;
   children: React.ReactNode;
@@ -16,6 +18,8 @@ export function CrudLayout({
   title,
   description,
   action,
+  toolbar,
+  pagination,
   flash,
   error,
   children,
@@ -24,19 +28,24 @@ export function CrudLayout({
     <div className="page-wrapper">
       <PageHeader title={title} description={description} action={action} />
 
+      {toolbar && <div className="crud-toolbar">{toolbar}</div>}
+
       {flash && (
         <div className="alert success">
           <MdInfoOutline size={20} /> {flash}
         </div>
       )}
-      
+
       {error && (
         <div className="alert error">
           <MdWarningAmber size={20} /> {error}
         </div>
       )}
 
-      <PageContainer>{children}</PageContainer>
+      <PageContainer>
+        {children}
+        {pagination && <div className="crud-pagination">{pagination}</div>}
+      </PageContainer>
     </div>
   );
 }
