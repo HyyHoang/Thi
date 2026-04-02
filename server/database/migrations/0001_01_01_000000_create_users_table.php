@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasTable('users')) {
-            Schema::create('users', function (Blueprint $table) {
-                $table->id('user_id');
-                $table->string('username', 50);
-                $table->string('email', 100)->unique();
-                $table->string('password', 255);
-                $table->tinyInteger('role')->comment('0: admin, 1: user');
-                $table->tinyInteger('status')->default(1)->comment('1: active, 0: inactive');
-                $table->timestamp('created_at')->useCurrent();
+        if (!Schema::hasTable('User')) {
+            Schema::create('User', function (Blueprint $table) {
+                $table->string('UserID', 10)->primary();
+                $table->string('Username', 50);
+                $table->string('Password', 255);
+                $table->string('Email', 100)->unique();
+                $table->text('AVT')->nullable();
+                $table->tinyInteger('Role')->comment('0: admin, 1: teacher, 2: student');
+                $table->dateTime('CreatedDate')->useCurrent();
             });
         }
 
@@ -34,7 +34,7 @@ return new class extends Migration
         if (!Schema::hasTable('sessions')) {
             Schema::create('sessions', function (Blueprint $table) {
                 $table->string('id')->primary();
-                $table->unsignedBigInteger('user_id')->nullable()->index();
+                $table->string('user_id', 10)->nullable()->index();
                 $table->string('ip_address', 45)->nullable();
                 $table->text('user_agent')->nullable();
                 $table->longText('payload');
@@ -48,7 +48,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('User');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
     }

@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('Institute', function (Blueprint $table) {
-            $table->increments('InstituteID');
+            $table->string('InstituteID', 10)->primary();
             $table->string('InstituteName', 255)->unique();
             $table->text('Description')->nullable();
             $table->dateTime('CreatedDate')->useCurrent();
