@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\SemesterController;
 use App\Http\Controllers\Api\CourseSectionController;
 use App\Http\Controllers\Api\EnrollmentController;
 use App\Http\Controllers\Api\ExamController;
+use App\Http\Controllers\Api\ExamAttemptController;
 
 Route::post('/auth/login', [AuthController::class, 'login']);
 
@@ -40,6 +41,19 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/exams', [ExamController::class, 'store']);
         Route::put('/exams/{id}', [ExamController::class, 'update']);
         Route::delete('/exams/{id}', [ExamController::class, 'destroy']);
+
+        // Exam Attempts — helpers (đặt TRƯỚC route {id})
+        Route::get('/exam-attempts/by-exam/{examId}', [ExamAttemptController::class, 'byExam']);
+        Route::get('/exam-attempts/by-student/{studentId}', [ExamAttemptController::class, 'byStudent']);
+        // Exam Attempts — CRUD read
+        Route::get('/exam-attempts', [ExamAttemptController::class, 'index']);
+        Route::get('/exam-attempts/{id}', [ExamAttemptController::class, 'show']);
+        Route::post('/exam-attempts', [ExamAttemptController::class, 'store']);
+
+        // Results
+        Route::get('/results', [\App\Http\Controllers\Api\ResultController::class, 'index']);
+        Route::get('/results/by-attempt/{attemptId}', [\App\Http\Controllers\Api\ResultController::class, 'byAttempt']);
+        Route::get('/results/{id}', [\App\Http\Controllers\Api\ResultController::class, 'show']);
 
         Route::get('/institutes', [InstituteController::class, 'index']);
         Route::get('/institutes/{id}', [InstituteController::class, 'show']);
@@ -119,5 +133,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/enrollments', [EnrollmentController::class, 'store']);
         Route::put('/enrollments/{id}', [EnrollmentController::class, 'update']);
         Route::delete('/enrollments/{id}', [EnrollmentController::class, 'destroy']);
+
+        // Exam Attempts — write (Admin only)
+        Route::put('/exam-attempts/{id}', [ExamAttemptController::class, 'update']);
+        Route::delete('/exam-attempts/{id}', [ExamAttemptController::class, 'destroy']);
     });
 });

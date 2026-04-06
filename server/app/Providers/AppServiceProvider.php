@@ -35,6 +35,14 @@ use App\Services\QuestionService;
 use App\Services\QuestionBankService;
 use App\Services\SemesterService;
 use Illuminate\Support\ServiceProvider;
+use App\Repositories\Contracts\ExamRepositoryInterface;
+use App\Repositories\ExamRepository;
+use App\Services\Contracts\ExamServiceInterface;
+use App\Services\ExamService;
+use App\Repositories\Contracts\ExamAttemptRepositoryInterface;
+use App\Repositories\ExamAttemptRepository;
+use App\Services\Contracts\ExamAttemptServiceInterface;
+use App\Services\ExamAttemptService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -83,6 +91,26 @@ class AppServiceProvider extends ServiceProvider
         // Course Section
         $this->app->bind(\App\Repositories\Contracts\CourseSectionRepositoryInterface::class, \App\Repositories\CourseSectionRepository::class);
         $this->app->bind(\App\Services\Contracts\CourseSectionServiceInterface::class, \App\Services\CourseSectionService::class);
+
+        // Enrollment
+        $this->app->bind(\App\Repositories\Contracts\EnrollmentRepositoryInterface::class, \App\Repositories\EnrollmentRepository::class);
+        $this->app->bind(\App\Services\Contracts\EnrollmentServiceInterface::class, \App\Services\EnrollmentService::class);
+
+        // Exam
+        $this->app->bind(ExamRepositoryInterface::class, ExamRepository::class);
+        $this->app->bind(ExamServiceInterface::class, ExamService::class);
+
+        // Exam Attempt
+        $this->app->bind(ExamAttemptRepositoryInterface::class, ExamAttemptRepository::class);
+        $this->app->bind(ExamAttemptServiceInterface::class, ExamAttemptService::class);
+
+        // Result
+        $this->app->bind(\App\Repositories\Contracts\ResultRepositoryInterface::class, \App\Repositories\ResultRepository::class);
+        $this->app->bind(\App\Services\Contracts\ResultServiceInterface::class, \App\Services\ResultService::class);
+
+        // Student Answer
+        $this->app->bind(\App\Repositories\Contracts\StudentAnswerRepositoryInterface::class, \App\Repositories\StudentAnswerRepository::class);
+        $this->app->bind(\App\Services\Contracts\StudentAnswerServiceInterface::class, \App\Services\StudentAnswerService::class);
     }
 
     /**
