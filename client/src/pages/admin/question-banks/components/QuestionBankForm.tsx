@@ -14,6 +14,7 @@ interface QuestionBankFormProps {
     chapterNames?: string[];
     onChapterCountChange?: (count: number) => void;
     onChapterNameChange?: (index: number, value: string) => void;
+    children?: React.ReactNode;
 }
 
 function QuestionBankForm({
@@ -28,6 +29,7 @@ function QuestionBankForm({
     chapterNames,
     onChapterCountChange,
     onChapterNameChange,
+    children,
 }: QuestionBankFormProps) {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -112,6 +114,8 @@ function QuestionBankForm({
                         ))}
                     </div>
                 )}
+
+            {children}
 
             <div className="modal-actions">
                 <button type="button" className="ghost-btn" onClick={onCancel}>

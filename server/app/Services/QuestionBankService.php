@@ -132,6 +132,28 @@ class QuestionBankService extends BaseService implements QuestionBankServiceInte
             'Description' => $data['description'] ?? null,
         ]);
 
+        // Xử lý cập nhật danh sách chương nếu có
+        if (isset($data['chapters']) && is_array($data['chapters'])) {
+            DB::transaction(function () use ($id, $data, $user) {
+                foreach ($data['chapters'] as $chData) {
+                    if (isset($chData['chapter_id'])) {
+                        $this->updateChapterForUser($id, (int)$chData['chapter_id'], [
+                            'chapter_number' => $chData['chapter_number'],
+                            'chapter_name'   => $chData['chapter_name'],
+                            'description'    => $chData['description'] ?? null,
+                        ], $user);
+                    } else {
+                        // Thêm chương mới nếu không có ID
+                        $this->createChapterForUser($id, [
+                            'chapter_number' => $chData['chapter_number'],
+                            'chapter_name'   => $chData['chapter_name'],
+                            'description'    => $chData['description'] ?? null,
+                        ], $user);
+                    }
+                }
+            });
+        }
+
         $subject = $bank->SubjectID
             ? Subject::where('SubjectID', $bank->SubjectID)->first()
             : null;
@@ -139,7 +161,7 @@ class QuestionBankService extends BaseService implements QuestionBankServiceInte
             ? User::where('UserID', $bank->UserID)->first()
             : null;
 
-        return $this->formatBankListRow($bank, $subject, $creator);
+        return $this->formatBankListRow($bank->fresh(), $subject, $creator);
     }
 
     /**
@@ -202,18 +224,25 @@ class QuestionBankService extends BaseService implements QuestionBankServiceInte
             ->firstOrFail();
 
         if (isset($data['chapter_number']) && (int) $data['chapter_number'] !== (int) $chapter->ChapterNumber) {
-            if ((int) $chapter->QuestionCount > 0) {
-                throw new \RuntimeException('Không thể đổi số chương khi chương đã có câu hỏi.');
-            }
+            $oldNumber = (int) $chapter->ChapterNumber;
+            $newNumber = (int) $data['chapter_number'];
+
             $exists = QuestionChapter::query()
                 ->where('BankID', $bankId)
-                ->where('ChapterNumber', (int) $data['chapter_number'])
+                ->where('ChapterNumber', $newNumber)
                 ->where('ChapterID', '!=', $chapterId)
                 ->exists();
             if ($exists) {
                 throw new \RuntimeException('Số chương đã tồn tại trong ngân hàng này.');
             }
-            $chapter->ChapterNumber = (int) $data['chapter_number'];
+
+            // Cập nhật số chương cho tất cả câu hỏi thuộc chương này
+            Question::query()
+                ->where('BankID', $bankId)
+                ->where('ChapterNumber', $oldNumber)
+                ->update(['ChapterNumber' => $newNumber]);
+
+            $chapter->ChapterNumber = $newNumber;
         }
 
         if (isset($data['chapter_name'])) {
@@ -275,6 +304,39 @@ class QuestionBankService extends BaseService implements QuestionBankServiceInte
         }
 
         abort(403, 'Bạn không có quyền chỉnh sửa ngân hàng này');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addQuestionsToChapter(string $bankId, int $chapterNumber, array $questionIds, User $user): int
+    {
+        /** @var QuestionBank $bank */
+        $bank = $this->repository->findById($bankId);
+        $this->assertCanModifyBank($bank, $user);
+
+        // Frontend truyền chapter_number (không phải ChapterID) lên URL
+        $chapter = QuestionChapter::query()
+            ->where('BankID', $bankId)
+            ->where('ChapterNumber', $chapterNumber)
+            ->firstOrFail();
+
+        if (empty($questionIds)) {
+            return 0;
+        }
+
+        // Cập nhật BankID và ChapterNumber cho các câu hỏi được chọn
+        $updated = Question::query()
+            ->whereIn('QuestionID', $questionIds)
+            ->update([
+                'BankID'        => $bankId,
+                'ChapterNumber' => $chapter->ChapterNumber,
+            ]);
+
+        // Cập nhật lại số lượng câu hỏi trong ngân hàng
+        QuestionBank::syncQuestionStats($bankId);
+
+        return $updated;
     }
 
     /**

@@ -33,7 +33,7 @@ class QuestionService extends BaseService implements QuestionServiceInterface
         return $this->questionRepository->getPaginatedWithOptions($perPage, $search, $type, $filters);
     }
 
-    public function importFromCsv(UploadedFile $file, string $userId): array
+    public function importFromCsv(UploadedFile $file, string $userId, ?string $defaultSubjectId = null): array
     {
         $rows = [];
         $path = $file->getRealPath();
@@ -49,10 +49,10 @@ class QuestionService extends BaseService implements QuestionServiceInterface
             $rows[] = array_map('strval', $row);
         }
         fclose($handle);
-        return $this->importFromRows($rows, $userId);
+        return $this->importFromRows($rows, $userId, $defaultSubjectId);
     }
 
-    public function importFromXlsx(UploadedFile $file, string $userId): array
+    public function importFromXlsx(UploadedFile $file, string $userId, ?string $defaultSubjectId = null): array
     {
         try {
             $spreadsheet = IOFactory::load($file->getRealPath());
@@ -65,7 +65,7 @@ class QuestionService extends BaseService implements QuestionServiceInterface
             $arr = is_array($row) ? $row : [$row];
             return array_values(array_map('strval', $arr));
         }, $rows);
-        return $this->importFromRows($rows, $userId);
+        return $this->importFromRows($rows, $userId, $defaultSubjectId);
     }
 
     private function resolveHeaderIndex(array $header, array $aliases): ?int
@@ -85,14 +85,14 @@ class QuestionService extends BaseService implements QuestionServiceInterface
         $map = [
             'single' => 'single', '1' => 'single', 'một' => 'single', 'mot' => 'single',
             'trắc nghiệm 1 đáp án' => 'single', 'trac nghiem 1 dap an' => 'single',
-            'multiple' => 'multiple', 'nhiều' => 'multiple', 'nhieu' => 'multiple',
+            'multiple' => 'multiple', '2' => 'multiple', 'nhiều' => 'multiple', 'nhieu' => 'multiple',
             'trắc nghiệm nhiều đáp án' => 'multiple', 'trac nghiem nhieu dap an' => 'multiple',
-            'essay' => 'essay', 'tự luận' => 'essay', 'tu luan' => 'essay',
+            'essay' => 'essay', '3' => 'essay', 'tự luận' => 'essay', 'tu luan' => 'essay',
         ];
         return $map[$t] ?? 'single';
     }
 
-    private function importFromRows(array $rows, string $userId): array
+    private function importFromRows(array $rows, string $userId, ?string $defaultSubjectId = null): array
     {
         $imported = 0;
         $errors = [];
@@ -104,6 +104,21 @@ class QuestionService extends BaseService implements QuestionServiceInterface
         $rawHeader = array_map(fn ($v) => strtolower(trim((string) $v)), $rows[0]);
         $header = $rawHeader;
 
+        try {
+            return $this->processImportRows($rows, $header, $userId, $defaultSubjectId);
+        } finally {
+            // Đảm bảo không còn transaction nào bị kẹt do lỗi bất ngờ
+            while (DB::transactionLevel() > 0) {
+                DB::rollBack();
+            }
+        }
+    }
+
+    private function processImportRows(array $rows, array $header, string $userId, ?string $defaultSubjectId): array
+    {
+        $imported = 0;
+        $errors = [];
+        
         $contentIdx = $this->resolveHeaderIndex($header, [
             'content', 'noidung', 'nội dung', 'noi dung', 'câu hỏi', 'cau hoi', 'câu', 'nội dung câu hỏi',
         ]);
@@ -116,7 +131,7 @@ class QuestionService extends BaseService implements QuestionServiceInterface
         ]);
 
         if ($contentIdx === null || $typeIdx === null) {
-            $found = implode(', ', array_filter($rawHeader));
+            $found = implode(', ', array_filter($header));
             throw new \RuntimeException(
                 'File cần có cột nội dung (content/noidung) và loại (type/loại). Cột tìm thấy: ' . ($found ?: '(trống)')
             );
@@ -141,9 +156,18 @@ class QuestionService extends BaseService implements QuestionServiceInterface
                     if ($subject) {
                         $subjectId = $subject->SubjectID;
                     } else {
-                        $errors[] = "Dòng {$rowNum}: Không tìm thấy môn học \"{$subjectName}\"";
+                        $errors[] = "Dòng {$rowNum}: Không tìm thấy môn học \"{$subjectName}\" trên hệ thống.";
                     }
                 }
+            }
+            
+            if (!$subjectId && $defaultSubjectId) {
+                $subjectId = $defaultSubjectId;
+            }
+
+            if (!$subjectId) {
+                 $errors[] = "Dòng {$rowNum}: Thiết môn học. Vui lòng thêm cột môn học hoặc chọn môn học ở form import.";
+                 continue;
             }
 
             $options = [];

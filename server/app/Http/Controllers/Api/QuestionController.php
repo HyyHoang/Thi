@@ -179,11 +179,12 @@ class QuestionController extends Controller
 
         $file = $request->file('file');
         $ext = strtolower($file->getClientOriginalExtension());
+        $subjectId = $request->input('subject_id');
 
         try {
             $result = in_array($ext, ['xlsx', 'xls'])
-                ? $this->questionService->importFromXlsx($file, $access['user']->UserID)
-                : $this->questionService->importFromCsv($file, $access['user']->UserID);
+                ? $this->questionService->importFromXlsx($file, $access['user']->UserID, $subjectId)
+                : $this->questionService->importFromCsv($file, $access['user']->UserID, $subjectId);
         } catch (\Throwable $e) {
             return response()->json([
                 'status' => 'error',

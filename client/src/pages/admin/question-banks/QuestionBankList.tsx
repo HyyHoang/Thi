@@ -133,7 +133,7 @@ function QuestionBankList() {
                 subject_id: bank.subject_id ? String(bank.subject_id) : '',
                 description: bank.description || '',
             });
-            if (mode === 'view') {
+            if (mode === 'view' || mode === 'edit') {
                 loadDetail(bank.bank_id);
             } else {
                 setDetail(null);
@@ -386,7 +386,77 @@ function QuestionBankList() {
                                         ? handleCreateChapterNameChange
                                         : undefined
                                 }
-                            />
+                            >
+                                {modalMode === 'edit' && detail && (
+                                    <div className="qb-edit-chapters-section">
+                                        <div className="qb-chapter-head">
+                                            <strong>Danh sách chương</strong>
+                                            {canModifyBank(detail.bank) && (
+                                                <button
+                                                    type="button"
+                                                    className="primary-btn qb-small-btn"
+                                                    onClick={() => openChapterModal('create')}
+                                                >
+                                                    Thêm chương
+                                                </button>
+                                            )}
+                                        </div>
+                                        <div className="department-table-wrapper qb-inner-table">
+                                            <table className="department-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Số chương</th>
+                                                        <th>Tên chương</th>
+                                                        <th>Số câu hỏi</th>
+                                                        <th>Thao tác</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {detail.chapters.length === 0 && (
+                                                        <tr>
+                                                            <td colSpan={4} className="muted">
+                                                                Chưa có chương nào.
+                                                            </td>
+                                                        </tr>
+                                                    )}
+                                                    {detail.chapters.map((ch) => (
+                                                        <tr key={ch.chapter_id}>
+                                                            <td>{ch.chapter_number}</td>
+                                                            <td>{ch.chapter_name}</td>
+                                                            <td>{ch.question_count}</td>
+                                                            <td>
+                                                                {canModifyBank(detail.bank) && (
+                                                                    <div className="action-group">
+                                                                        <button
+                                                                            type="button"
+                                                                            className="ghost-btn"
+                                                                            onClick={() =>
+                                                                                openChapterModal('edit', ch)
+                                                                            }
+                                                                        >
+                                                                            Sửa
+                                                                        </button>
+                                                                        <button
+                                                                            type="button"
+                                                                            className="danger-btn"
+                                                                            onClick={() =>
+                                                                                handleDeleteChapter(ch)
+                                                                            }
+                                                                            disabled={ch.question_count > 0}
+                                                                        >
+                                                                            Xóa
+                                                                        </button>
+                                                                    </div>
+                                                                )}
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                )}
+                            </QuestionBankForm>
                         )}
 
                         {modalMode === 'view' && selectedBank && (

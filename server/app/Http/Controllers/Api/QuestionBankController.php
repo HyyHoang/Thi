@@ -162,4 +162,41 @@ class QuestionBankController extends Controller
             'message' => 'Xóa chương thành công',
         ]);
     }
+
+    public function addQuestions(Request $request, string $bankId, int $chapterId): JsonResponse
+    {
+        $questionIds = $request->input('question_ids', []);
+
+        if (empty($questionIds) || !is_array($questionIds)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Danh sách câu hỏi không hợp lệ.',
+            ], 422);
+        }
+
+        try {
+            $count = $this->questionBankService->addQuestionsToChapter(
+                $bankId,
+                $chapterId,
+                $questionIds,
+                $request->user()
+            );
+        } catch (\RuntimeException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 422);
+        } catch (HttpException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], $e->getStatusCode());
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => "Đã thêm {$count} câu hỏi vào chương thành công.",
+            'data'    => ['updated' => $count],
+        ]);
+    }
 }
