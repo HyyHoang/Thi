@@ -138,4 +138,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/exam-attempts/{id}', [ExamAttemptController::class, 'update']);
         Route::delete('/exam-attempts/{id}', [ExamAttemptController::class, 'destroy']);
     });
+
+    // ─── Student routes ─────────────────────────────────────────
+    Route::middleware('role.student')->prefix('student')->group(function () {
+        Route::get('/exams', [\App\Http\Controllers\Api\StudentExamController::class, 'myExams']);
+        Route::get('/profile', [\App\Http\Controllers\Api\StudentExamController::class, 'myProfile']);
+    });
 });
