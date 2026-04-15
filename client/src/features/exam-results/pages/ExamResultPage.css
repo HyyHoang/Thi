@@ -1,0 +1,135 @@
+.exam-result-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  padding: 24px;
+  font-family: 'Inter', sans-serif;
+}
+
+.exam-result-card {
+  background: white;
+  border-radius: 24px;
+  padding: 48px;
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+}
+
+.result-icon-success {
+  font-size: 64px;
+  color: #10b981;
+  margin-bottom: 16px;
+}
+
+.exam-result-card h2 {
+  font-size: 1.8rem;
+  color: #1e293b;
+  font-family: 'Outfit', sans-serif;
+  margin-bottom: 8px;
+  margin-top: 0;
+}
+
+.result-details {
+  background: #f8fafc;
+  border-radius: 16px;
+  padding: 32px 24px;
+  margin-top: 24px;
+  margin-bottom: 32px;
+}
+
+.result-exam-title {
+  color: #475569;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 24px;
+  margin-top: 0;
+}
+
+.result-score-box {
+  display: inline-flex;
+  flex-direction: column;
+  background: #eff6ff;
+  border: 2px solid #bfdbfe;
+  padding: 24px 48px;
+  border-radius: 20px;
+  margin-bottom: 24px;
+  color: #1d4ed8;
+}
+
+.score-value {
+  font-size: 4rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.score-unit {
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 8px;
+}
+
+.result-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 24px;
+}
+
+.result-stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: #64748b;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.stat-value {
+  font-size: 1.2rem;
+  color: #1e293b;
+  font-weight: 700;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #475569, #334155);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(51, 65, 85, 0.2);
+}
+
+.back-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(51, 65, 85, 0.3);
+}
+
+.result-not-found {
+  color: #ef4444;
+  margin: 24px 0;
+  font-weight: 500;
+}
+
+.result-loading {
+  text-align: center;
+  margin-top: 48px;
+  font-size: 1.2rem;
+  color: #64748b;
+}

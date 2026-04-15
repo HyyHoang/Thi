@@ -6,6 +6,8 @@ import {
   MdArrowDropDown,
   MdLogout,
   MdMenu,
+  MdPerson,
+  MdHistory,
 } from 'react-icons/md';
 import authService from '../../services/authService';
 import './StudentLayout.css';
@@ -89,6 +91,16 @@ function StudentLayout() {
                   <div className="student-user-dropdown">
                     <button
                       type="button"
+                      className="student-dropdown-item"
+                      onClick={() => {
+                        setDropdownOpen(false);
+                        navigate('/student/my-profile');
+                      }}
+                    >
+                      <MdPerson /> Hồ sơ cá nhân
+                    </button>
+                    <button
+                      type="button"
                       className="student-dropdown-item text-danger"
                       onClick={handleLogout}
                     >
@@ -134,6 +146,28 @@ function StudentLayout() {
           >
             <MdQuiz className="student-nav-link-icon" />
             <span className="student-nav-text">Làm bài thi</span>
+          </NavLink>
+
+          <NavLink
+            to="/student/practice-exams"
+            className={({ isActive }) =>
+              `student-nav-link ${isActive ? 'active' : ''}`
+            }
+            title="Luyện Thi / Ôn Tập"
+          >
+            <MdQuiz className="student-nav-link-icon" />
+            <span className="student-nav-text">Luyện Thi / Ôn Tập</span>
+          </NavLink>
+
+          <NavLink
+            to="/student/exam-history"
+            className={({ isActive }) =>
+              `student-nav-link ${isActive ? 'active' : ''}`
+            }
+            title="Lịch sử thi"
+          >
+            <MdHistory className="student-nav-link-icon" />
+            <span className="student-nav-text">Lịch sử thi</span>
           </NavLink>
         </aside>
 

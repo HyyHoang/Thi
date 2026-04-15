@@ -234,6 +234,7 @@ function ExamAttemptList() {
       <Modal
         isOpen={modalOpen}
         onClose={closeModal}
+        size={modalMode === 'view_result' ? 'xl' : 'md'}
         title={
           modalMode === 'create' ? 'Tạo lượt làm bài' :
           modalMode === 'edit' ? 'Cập nhật trạng thái' :
@@ -299,7 +300,7 @@ function ExamAttemptList() {
         )}
 
         {modalMode === 'view_result' && (
-          <div style={{ minWidth: '600px' }}>
+          <div>
             {resultLoading ? (
                <div style={{ padding: '20px', textAlign: 'center' }}>Đang tải hệ thống...</div>
             ) : resultError ? (

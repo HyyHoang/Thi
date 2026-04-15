@@ -394,3 +394,12 @@
     padding: 12px;
   }
 }
+
+/* When exam room is active, hide footer and remove extra padding */
+.student-main-content:has(.exam-room-container) {
+  padding-bottom: 0;
+}
+
+.student-main-content:has(.exam-room-container) + .student-footer {
+  display: none;
+}
