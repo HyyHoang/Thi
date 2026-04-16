@@ -138,8 +138,11 @@ class StudentExamController extends Controller
                         $result['attempt']['score']           = (float) $resultModel->Score;
                         $result['attempt']['correct_answers'] = (int) $resultModel->CorrectAnswers;
                         $result['attempt']['working_time']    = (int) $resultModel->WorkingTime;
+                        $result['attempt']['is_graded']       = (bool) $resultModel->IsGraded;
                     }
                 }
+
+                $result['essay_weight'] = (float) ($exam->EssayWeight ?? 0);
             }
 
             return $result;
@@ -544,6 +547,8 @@ class StudentExamController extends Controller
                 'total'        => $exam?->QuestionCount,
                 'duration'     => $exam?->Duration,
                 'working_time' => $resultModel ? (int)$resultModel->WorkingTime : null,
+                'is_graded'    => $resultModel ? (bool)$resultModel->IsGraded : null,
+                'essay_weight' => (float) ($exam?->EssayWeight ?? 0),
             ];
         });
 
