@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\CourseSectionController;
 use App\Http\Controllers\Api\EnrollmentController;
 use App\Http\Controllers\Api\ExamController;
 use App\Http\Controllers\Api\ExamAttemptController;
+use App\Http\Controllers\Api\FinalExamController;
 
 Route::post('/auth/login', [AuthController::class, 'login']);
 
@@ -28,6 +29,10 @@ Route::middleware('auth:sanctum')->group(function () {
     // Course Sections (Shared)
     Route::get('/course-sections', [CourseSectionController::class, 'index']);
     Route::get('/course-sections/{id}', [CourseSectionController::class, 'show']);
+
+    // Subjects (Shared)
+    Route::get('/subjects', [SubjectController::class, 'index']);
+    Route::get('/subjects/{id}', [SubjectController::class, 'show']);
 
     Route::middleware('role.admin_or_teacher')->group(function () {
         // Exam helpers (phải đặt TRƯỚC route {id} để tránh conflict)
@@ -45,6 +50,7 @@ Route::middleware('auth:sanctum')->group(function () {
         // Exam Attempts — helpers (đặt TRƯỚC route {id})
         Route::get('/exam-attempts/by-exam/{examId}', [ExamAttemptController::class, 'byExam']);
         Route::get('/exam-attempts/by-student/{studentId}', [ExamAttemptController::class, 'byStudent']);
+        Route::get('/exam-attempts/export', [ExamAttemptController::class, 'export']);
         // Exam Attempts — CRUD read
         Route::get('/exam-attempts', [ExamAttemptController::class, 'index']);
         Route::get('/exam-attempts/{id}', [ExamAttemptController::class, 'show']);
@@ -55,6 +61,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/results/by-attempt/{attemptId}', [\App\Http\Controllers\Api\ResultController::class, 'byAttempt']);
         Route::get('/results/{id}', [\App\Http\Controllers\Api\ResultController::class, 'show']);
 
+        // Grading
+        Route::get('/grading/pending', [\App\Http\Controllers\Api\GradeController::class, 'pending']);
+        Route::get('/grading/{resultId}', [\App\Http\Controllers\Api\GradeController::class, 'show']);
+        Route::post('/grading/{resultId}', [\App\Http\Controllers\Api\GradeController::class, 'update']);
+
         Route::get('/institutes', [InstituteController::class, 'index']);
         Route::get('/institutes/{id}', [InstituteController::class, 'show']);
 
@@ -64,8 +75,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/semesters', [SemesterController::class, 'index']);
         Route::get('/semesters/{id}', [SemesterController::class, 'show']);
 
-        Route::get('/subjects', [SubjectController::class, 'index']);
-        Route::get('/subjects/{id}', [SubjectController::class, 'show']);
 
         // Questions
         Route::get('/questions', [QuestionController::class, 'index']);
@@ -87,6 +96,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::get('/profile/me', [TeacherProfileController::class, 'myProfile']);
         Route::put('/profile/me', [TeacherProfileController::class, 'updateMyProfile']);
+        Route::get('/student-profiles/export', [\App\Http\Controllers\Api\StudentProfileController::class, 'export']);
         Route::get('/student-profiles', [\App\Http\Controllers\Api\StudentProfileController::class, 'index']);
         Route::get('/student-profiles/{id}', [\App\Http\Controllers\Api\StudentProfileController::class, 'show']);
 
@@ -115,6 +125,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/subjects/{id}', [SubjectController::class, 'update']);
         Route::delete('/subjects/{id}', [SubjectController::class, 'destroy']);
 
+        Route::get('/teachers/export', [TeacherProfileController::class, 'export']);
         Route::get('/teachers', [TeacherProfileController::class, 'index']);
         Route::post('/teachers', [TeacherProfileController::class, 'store']);
         Route::get('/teachers/{id}', [TeacherProfileController::class, 'show']);
@@ -137,11 +148,30 @@ Route::middleware('auth:sanctum')->group(function () {
         // Exam Attempts — write (Admin only)
         Route::put('/exam-attempts/{id}', [ExamAttemptController::class, 'update']);
         Route::delete('/exam-attempts/{id}', [ExamAttemptController::class, 'destroy']);
+
+        // Final Exams (Admin only)
+        Route::get('/final-exams', [FinalExamController::class, 'index']);
+        Route::post('/final-exams', [FinalExamController::class, 'store']);
+        Route::get('/final-exams/{examId}/students', [FinalExamController::class, 'students']);
+        Route::get('/final-exams/{examId}/accounts', [FinalExamController::class, 'getAccounts']);
+        Route::post('/final-exams/{examId}/generate-accounts', [FinalExamController::class, 'generateAccounts']);
     });
 
     // ─── Student routes ─────────────────────────────────────────
     Route::middleware('role.student')->prefix('student')->group(function () {
         Route::get('/exams', [\App\Http\Controllers\Api\StudentExamController::class, 'myExams']);
+        Route::get('/exam-history', [\App\Http\Controllers\Api\StudentExamController::class, 'examHistory']);
         Route::get('/profile', [\App\Http\Controllers\Api\StudentExamController::class, 'myProfile']);
+        Route::put('/profile', [\App\Http\Controllers\Api\StudentExamController::class, 'updateMyProfile']);
+
+        // Practice Exams
+        Route::get('/practice-exams', [\App\Http\Controllers\Api\StudentPracticeExamController::class, 'index']);
+        Route::post('/practice-exams', [\App\Http\Controllers\Api\StudentPracticeExamController::class, 'store']);
+        Route::get('/practice-exams/{id}', [\App\Http\Controllers\Api\StudentPracticeExamController::class, 'show']);
+
+        // Exam operations
+        Route::post('/exams/{id}/verify-password', [\App\Http\Controllers\Api\StudentExamController::class, 'verifyPassword']);
+        Route::get('/exams/{id}/take', [\App\Http\Controllers\Api\StudentExamController::class, 'takeExam']);
+        Route::post('/exams/{id}/submit', [\App\Http\Controllers\Api\StudentExamController::class, 'submitExam']);
     });
 });

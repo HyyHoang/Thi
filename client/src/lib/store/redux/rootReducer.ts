@@ -10,6 +10,10 @@ import studentProfilesReducer from '../../../features/student-profiles/redux/stu
 import teacherProfilesReducer from '../../../features/teacher-profiles/redux/teacherProfileSlice';
 import questionsReducer from '../../../features/questions/redux/questionSlice';
 import questionBanksReducer from '../../../features/question-banks/redux/questionBankSlice';
+import enrollmentsReducer from '../../../features/enrollments/api';
+import examsReducer from '../../../features/exams/redux/examSlice';
+import examAttemptsReducer from '../../../features/exam-attempts/redux/examAttemptSlice';
+import resultsReducer from '../../../features/results/redux/resultsSlice';
 
 export const rootReducer = combineReducers({
     courseSections: courseSectionsReducer,
@@ -22,4 +26,8 @@ export const rootReducer = combineReducers({
     teacherProfiles: teacherProfilesReducer,
     questions: questionsReducer,
     questionBanks: questionBanksReducer,
+    enrollments: enrollmentsReducer,
+    exams: examsReducer,
+    examAttempts: examAttemptsReducer,
+    results: resultsReducer,
 });

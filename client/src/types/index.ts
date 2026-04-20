@@ -218,6 +218,7 @@ export interface QuestionBankCreatePayload extends QuestionBankPayload {
         chapter_number: number;
         chapter_name: string;
         description?: string;
+        chapter_type: string;
     }[];
 }
 
@@ -227,6 +228,7 @@ export interface QuestionChapterRow {
     chapter_name: string;
     description?: string | null;
     question_count: number;
+    chapter_type: 'mcq' | 'essay';
 }
 
 export interface QuestionBankDetail {
@@ -239,6 +241,7 @@ export interface QuestionChapterPayload {
     chapter_number: number;
     chapter_name: string;
     description?: string;
+    chapter_type?: string;
 }
 
 // =====================
@@ -251,6 +254,9 @@ export interface StudentProfile {
     FullName: string;
     EnrollmentYear: number;
     Status: number;
+    DateOfBirth?: string | null;
+    Hometown?: string | null;
+    Gender?: number | null;
     user?: User;
     department?: Department;
 }
@@ -261,6 +267,9 @@ export interface StudentProfilePayload {
     FullName: string;
     EnrollmentYear: number;
     Status?: number;
+    DateOfBirth?: string | null;
+    Hometown?: string | null;
+    Gender?: number | null;
 }
 
 // =====================
@@ -294,4 +303,196 @@ export interface CourseSectionPayload {
     SemesterID: string;
     TeacherID: string;
     MaxStudent: number | string;
+}
+
+// =====================
+// Exam
+// =====================
+export interface ExamChapterConfig {
+    bank_id: string;
+    bank_name?: string;
+    chapter_number: number;
+    question_count: number;
+    weight?: number;
+}
+
+export interface Exam {
+    exam_id: string;
+    title: string;
+    is_final_exam?: boolean;
+    section_id?: string;
+    section_name?: string;
+    duration: number;
+    start_time: string;
+    end_time: string;
+    password_enabled: boolean;
+    password_exam?: string | null;
+    is_fullscreen?: boolean;
+    is_prevent_copy?: boolean;
+    question_count: number;
+    created_by: string;
+    creator_username?: string;
+    created_date?: string;
+    semester_id?: string;
+    semester_name?: string;
+    subject_id?: string;
+    subject_name?: string;
+    chapter_configs?: ExamChapterConfig[];
+    mcq_weight: number;
+    essay_weight: number;
+}
+
+export interface ExamPayload {
+    title: string;
+    section_id?: string;
+    subject_id?: string;
+    duration: number;
+    start_time: string;
+    end_time: string;
+    password_exam?: string | null;
+    is_fullscreen?: boolean;
+    is_prevent_copy?: boolean;
+    chapter_configs: ExamChapterConfig[];
+    mcq_weight: number;
+    essay_weight: number;
+    is_final_exam?: boolean;
+}
+
+// =====================
+// Enrollment
+// =====================
+export interface Enrollment {
+    EnrollmentID: string;
+    SectionID: string;
+    StudentID: string;
+    EnrollDate: string;
+    Status: number;
+    course_section?: {
+        SectionID: string;
+        SectionName: string;
+        MaxStudent: number;
+        Subject?: {
+            SubjectID: string;
+            SubjectName: string;
+        } | null;
+        Semester?: {
+            SemesterID: string;
+            SemesterName: string;
+        } | null;
+        Teacher?: {
+            TeacherID: string;
+            FullName: string;
+        } | null;
+    } | null;
+    student_profile?: {
+        StudentID: string;
+        FullName: string;
+        EnrollmentYear: number;
+        Status: number;
+        Department?: {
+            DepartmentID: string;
+            DepartmentName: string;
+        } | null;
+    } | null;
+}
+
+// =====================
+// Student Exam (for student-facing exam list)
+// =====================
+export interface StudentExam {
+    exam_id: string;
+    title: string;
+    section_id: string;
+    section_name: string;
+    subject_name: string;
+    semester_name: string;
+    duration: number;
+    question_count: number;
+    password_enabled: boolean;
+    is_fullscreen: boolean;
+    is_prevent_copy: boolean;
+    start_time: string;
+    end_time: string;
+    status: 'upcoming' | 'active' | 'expired' | 'completed';
+    attempt?: {
+        attempt_id: number;
+        status: string;
+        start_time?: string;
+        submit_time?: string;
+        score?: number;
+        correct_answers?: number;
+        working_time?: number;
+    } | null;
+}
+
+// =====================
+// Exam Attempt
+// =====================
+export interface ExamAttempt {
+    attempt_id: number;
+    exam_id: string;
+    exam_title?: string;
+    subject_name?: string;
+    semester_name?: string;
+    section_name?: string;
+    student_id: string;
+    student_name?: string;
+    start_time: string;
+    submit_time?: string | null;
+    status: 'in_progress' | 'submitted' | 'expired';
+    ip_address?: string;
+    is_final_exam?: boolean;
+}
+
+export interface ExamAttemptPayload {
+    exam_id?: string;
+    student_id?: string;
+    status?: string;
+    submit_time?: string;
+    ip_address?: string;
+}
+
+// =====================
+// Result & StudentAnswer
+// =====================
+export interface ResultStudentAnswer {
+    student_answer_id: number;
+    question_id: string;
+    question_type?: 'single' | 'multiple' | 'essay';
+    content?: string;
+    selected_answer?: string;
+    is_correct: boolean;
+    correct_answer?: string | null;
+    raw_score?: number | null;
+}
+
+export interface Result {
+    result_id: number;
+    attempt_id: number;
+    score: number | string;
+    correct_answers: number;
+    working_time: number;
+    mcq_score?: number;
+    essay_score?: number;
+    is_graded?: boolean;
+    created_at?: string;
+
+    // Nested objects from detail API
+    student?: {
+        student_id: string;
+        student_name: string;
+    } | null;
+    exam?: {
+        exam_id: string;
+        exam_title: string;
+        mcq_weight?: number;
+        essay_weight?: number;
+    } | null;
+    student_answers?: ResultStudentAnswer[];
+
+    // Flat fields from list API
+    student_id?: string;
+    student_name?: string;
+    exam_id?: string;
+    exam_title?: string;
 }

@@ -26,9 +26,8 @@ class StudentExamController extends Controller
     public function myExams(Request $request): JsonResponse
     {
         $user = $request->user();
-
-        // Tìm StudentProfile
-        $student = StudentProfile::where('UserID', $user->UserID)->first();
+        $student = $this->resolveStudent($user);
+        
         if (!$student) {
             return response()->json([
                 'success' => true,
@@ -166,9 +165,11 @@ class StudentExamController extends Controller
     public function myProfile(Request $request): JsonResponse
     {
         $user = $request->user();
-        $student = StudentProfile::where('UserID', $user->UserID)
-            ->with(['department', 'user'])
-            ->first();
+        $student = $this->resolveStudent($user);
+        
+        if ($student) {
+            $student->load(['department', 'user']);
+        }
 
         if (!$student) {
             return response()->json([
@@ -209,7 +210,7 @@ class StudentExamController extends Controller
         ]);
 
         $user = $request->user();
-        $student = StudentProfile::where('UserID', $user->UserID)->first();
+        $student = $this->resolveStudent($user);
 
         if (!$student) {
             return response()->json([
@@ -255,7 +256,7 @@ class StudentExamController extends Controller
         $request->validate(['password' => 'required|string']);
 
         $user = $request->user();
-        $student = StudentProfile::where('UserID', $user->UserID)->first();
+        $student = $this->resolveStudent($user);
         if (!$student) return response()->json(['success' => false, 'message' => 'Not a student.'], 403);
 
         $exam = Exam::find($id);
@@ -325,7 +326,7 @@ class StudentExamController extends Controller
     public function takeExam(Request $request, $id): JsonResponse
     {
         $user = $request->user();
-        $student = StudentProfile::where('UserID', $user->UserID)->first();
+        $student = $this->resolveStudent($user);
         if (!$student) return response()->json(['success' => false], 403);
 
         $exam = Exam::with('chapterConfigs')->find($id);
@@ -396,7 +397,7 @@ class StudentExamController extends Controller
     public function submitExam(Request $request, $id): JsonResponse
     {
         $user = $request->user();
-        $student = StudentProfile::where('UserID', $user->UserID)->first();
+        $student = $this->resolveStudent($user);
         if (!$student) return response()->json(['success' => false], 403);
 
         $attempt = ExamAttempt::where('ExamID', $id)->where('StudentID', $student->StudentID)->first();
@@ -510,7 +511,7 @@ class StudentExamController extends Controller
     public function examHistory(Request $request): JsonResponse
     {
         $user = $request->user();
-        $student = StudentProfile::where('UserID', $user->UserID)->first();
+        $student = $this->resolveStudent($user);
 
         if (!$student) {
             return response()->json([
@@ -556,5 +557,13 @@ class StudentExamController extends Controller
             'success' => true,
             'data'    => $history,
         ]);
+    }
+
+    private function resolveStudent($user): ?StudentProfile
+    {
+        if ($user->IsTemporary && $user->OriginalUserID) {
+            return StudentProfile::where('UserID', $user->OriginalUserID)->first();
+        }
+        return StudentProfile::where('UserID', $user->UserID)->first();
     }
 }

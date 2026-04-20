@@ -221,12 +221,21 @@ export default function StudentExamList() {
                     )}
 
                     {exam.status === 'completed' && exam.attempt?.score !== undefined && (
-                      <div className="stu-exam-score">
-                        <span className="stu-exam-score-value">
-                          {exam.attempt.score.toFixed(1)}
-                        </span>
-                        <span className="stu-exam-score-label">điểm</span>
-                      </div>
+                      (exam as any).essay_weight > 0 && !(exam.attempt as any)?.is_graded ? (
+                        <div className="stu-exam-score" style={{ background: 'rgba(245, 158, 11, 0.1)' }}>
+                          <span className="stu-exam-score-value" style={{ fontSize: '0.85rem', color: '#d97706' }}>
+                            ⏳ Đang chờ chấm
+                          </span>
+                          <span className="stu-exam-score-label" style={{ color: '#92400e' }}>tự luận</span>
+                        </div>
+                      ) : (
+                        <div className="stu-exam-score">
+                          <span className="stu-exam-score-value">
+                            {exam.attempt.score.toFixed(2)}
+                          </span>
+                          <span className="stu-exam-score-label">điểm</span>
+                        </div>
+                      )
                     )}
 
                     {exam.status === 'completed' && exam.attempt?.score === undefined && (
