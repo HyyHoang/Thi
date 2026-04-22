@@ -65,6 +65,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/grading/pending', [\App\Http\Controllers\Api\GradeController::class, 'pending']);
         Route::get('/grading/{resultId}', [\App\Http\Controllers\Api\GradeController::class, 'show']);
         Route::post('/grading/{resultId}', [\App\Http\Controllers\Api\GradeController::class, 'update']);
+        Route::post('/grading/ai-grade-answer/{answerId}', [\App\Http\Controllers\Api\GradeController::class, 'triggerAIGrading']);
 
         Route::get('/institutes', [InstituteController::class, 'index']);
         Route::get('/institutes/{id}', [InstituteController::class, 'show']);

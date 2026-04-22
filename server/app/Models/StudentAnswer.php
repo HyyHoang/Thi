@@ -20,10 +20,14 @@ class StudentAnswer extends Model
         'QuestionID',
         'SelectedAnswer',
         'IsCorrect',
+        'RawScore',
+        'AIGradeScore',
+        'AIFeedback',
     ];
 
     protected $casts = [
         'IsCorrect' => 'boolean',
+        'RawScore'  => 'float',
     ];
 
     // ─── Relations ────────────────────────────────────────────────
