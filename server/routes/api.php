@@ -15,6 +15,8 @@ use App\Http\Controllers\Api\EnrollmentController;
 use App\Http\Controllers\Api\ExamController;
 use App\Http\Controllers\Api\ExamAttemptController;
 use App\Http\Controllers\Api\FinalExamController;
+use App\Http\Controllers\Api\KnowledgeController;
+use App\Http\Controllers\Api\DashboardController;
 
 Route::post('/auth/login', [AuthController::class, 'login']);
 
@@ -35,6 +37,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/subjects/{id}', [SubjectController::class, 'show']);
 
     Route::middleware('role.admin_or_teacher')->group(function () {
+        // Dashboard
+        Route::get('/dashboard/exams', [DashboardController::class, 'exams']);
+        Route::get('/dashboard/exam-stats', [DashboardController::class, 'examStats']);
+
         // Exam helpers (phải đặt TRƯỚC route {id} để tránh conflict)
         Route::get('/exams/current-semester', [ExamController::class, 'currentSemester']);
         Route::get('/exams/subjects-for-semester', [ExamController::class, 'subjectsForSemester']);
@@ -94,6 +100,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/question-banks/{bankId}/chapters/{chapterId}', [QuestionBankController::class, 'updateChapter']);
         Route::delete('/question-banks/{bankId}/chapters/{chapterId}', [QuestionBankController::class, 'destroyChapter']);
         Route::post('/question-banks/{bankId}/chapters/{chapterId}/questions', [QuestionBankController::class, 'addQuestions']);
+        Route::delete('/question-banks/{bankId}/chapters/{chapterId}/questions', [QuestionBankController::class, 'removeQuestions']);
 
         Route::get('/profile/me', [TeacherProfileController::class, 'myProfile']);
         Route::put('/profile/me', [TeacherProfileController::class, 'updateMyProfile']);
@@ -149,6 +156,9 @@ Route::middleware('auth:sanctum')->group(function () {
         // Exam Attempts — write (Admin only)
         Route::put('/exam-attempts/{id}', [ExamAttemptController::class, 'update']);
         Route::delete('/exam-attempts/{id}', [ExamAttemptController::class, 'destroy']);
+        Route::post('/exam-attempts/{id}/analyze', [ExamAttemptController::class, 'analyze']);
+        Route::post('/exam-attempts/by-student/{studentId}/analyze', [ExamAttemptController::class, 'analyzeStudent']);
+        Route::post('/exam-attempts/by-exam/{examId}/analyze', [ExamAttemptController::class, 'analyzeExam']);
 
         // Final Exams (Admin only)
         Route::get('/final-exams', [FinalExamController::class, 'index']);
@@ -156,10 +166,18 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/final-exams/{examId}/students', [FinalExamController::class, 'students']);
         Route::get('/final-exams/{examId}/accounts', [FinalExamController::class, 'getAccounts']);
         Route::post('/final-exams/{examId}/generate-accounts', [FinalExamController::class, 'generateAccounts']);
+
+        // Knowledge Base (Admin)
+        Route::get('/knowledge', [KnowledgeController::class, 'index']);
+        Route::post('/knowledge', [KnowledgeController::class, 'store']);
+        Route::delete('/knowledge/{id}', [KnowledgeController::class, 'destroy']);
     });
 
     // ─── Student routes ─────────────────────────────────────────
     Route::middleware('role.student')->prefix('student')->group(function () {
+        Route::get('/dashboard/exams', [DashboardController::class, 'studentExams']);
+        Route::get('/dashboard/stats', [DashboardController::class, 'studentStats']);
+
         Route::get('/exams', [\App\Http\Controllers\Api\StudentExamController::class, 'myExams']);
         Route::get('/exam-history', [\App\Http\Controllers\Api\StudentExamController::class, 'examHistory']);
         Route::get('/profile', [\App\Http\Controllers\Api\StudentExamController::class, 'myProfile']);
@@ -174,5 +192,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/exams/{id}/verify-password', [\App\Http\Controllers\Api\StudentExamController::class, 'verifyPassword']);
         Route::get('/exams/{id}/take', [\App\Http\Controllers\Api\StudentExamController::class, 'takeExam']);
         Route::post('/exams/{id}/submit', [\App\Http\Controllers\Api\StudentExamController::class, 'submitExam']);
+
+        // Knowledge AI Chat (Student)
+        Route::post('/ai/ask', [KnowledgeController::class, 'ask']);
     });
 });
